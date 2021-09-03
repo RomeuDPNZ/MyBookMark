@@ -1,0 +1,305 @@
+* {
+	margin: 0px;
+	padding: 0px;
+	/* font-family: verdana, sans-serif; */
+	/* font-family: deutsch gothic; */
+	/* font-family: segoe-wp, sans-serif; */
+	/* font-family: segoe-ui, sans-serif; */
+	/* font-weight: bold; */	
+	/* line-height: 1em; */
+	background-color: #282828;
+
+	/* font-family: segoe-wp, sans-serif; */
+	font-family: 'Roboto', sans-serif;
+	font-size: 100%;
+	line-height: 1.20em;
+	color: #729fcf;
+}
+
+a {
+	/* display: block; */
+	color: orange;
+	text-decoration: none;
+}
+
+a:link {
+}
+
+a:visited {
+}
+
+a:hover {
+}
+
+a:active {
+}
+
+h3 {
+	color: azure;
+	border-bottom: 2px solid snow;
+}
+
+legend {
+	color: azure;
+	font-weight: bold;
+}
+
+label {
+
+}
+
+button {
+	width: 6em;
+	padding: 3px;
+	color: orange;
+}
+
+div.ControlsFrontPage {
+	position: fixed;
+	left: 3em;
+	bottom: 6em;
+	width: 25%;
+	height: 25px;
+}
+
+div.DivEditDivs {
+    position: fixed;
+    top: 1em;
+    left: 1em;
+    bottom: 1em;
+    right: 1em;
+    padding: 1em;
+    overflow: auto;
+    border: 2px solid snow;
+}
+
+div.ShowDivEditor {
+	position: fixed;
+	left: 3em;
+	bottom: 6em;
+	width: 25%;
+	height: 25px;
+}
+
+input.Numbers {
+	width: 75px;
+}
+
+span.emoji {
+	margin-left: 5px;
+}
+
+span.happy {
+
+}
+
+span.sad {
+	
+}
+
+span.SpanShowDivEditor {
+	color: #729fcf;
+}
+
+span.SpanEditCategory {
+	float: right;
+	position: relative;
+	right: 2px;
+	top: 0px;
+}
+
+button.EditCRUDButton {
+	width: 100%;
+	margin-bottom: 1em;
+}
+
+span.SpanBottomEditCategory {
+	float: right;
+	position: relative;
+	right: 4em;
+	top: 0px;
+}
+
+div.DivEditCategory {
+    position: fixed;
+    top: 1em;
+    left: 1em;
+    bottom: 1em;
+    right: 1em;
+    padding: 1em;
+    overflow: auto;
+    border: 2px solid snow;
+}
+
+div.DivEditCRUDCategory {
+    position: fixed;
+    top: 1em;
+    left: 1em;
+    bottom: 1em;
+    right: 1em;
+    padding: 1em;
+    overflow: auto;
+    border: 2px solid snow;
+}
+
+table {
+	border: 2px solid snow;
+	border-collapse: collapse;
+}
+
+th, td {
+	border: 2px solid snow;
+  	padding: 15px;
+  	text-align: left;
+}
+
+div.DivEditor {
+    position: fixed;
+    top: 1em;
+    left: 1em;
+    bottom: 1em;
+    right: 1em;
+    padding: 1em;
+    overflow: auto;
+    border: 2px solid snow;
+}
+
+div.DivThreeColumns {
+    position: fixed;
+    top: 1em;
+    left: 1em;
+    bottom: 1em;
+    right: 1em;
+    padding: 5px;
+    overflow: auto;
+    border: 2px solid snow;
+}
+
+div.ForFieldsetThreeColumns {
+	width: 33.3%;
+	float: left;
+	height: 100%;
+    border: none;
+}
+
+div.ForFieldsetThreeColumns~div.ForFieldsetThreeColumns {
+	/* border-left: 2px solid gray; */
+}
+
+
+fieldset.FieldsetThreeColumns {
+	margin: 5px;
+	padding: 1em;
+    height: 94%;
+    overflow: auto;
+	border: 2px solid snow;
+}
+
+div.Column {
+    height: 94%;
+    -webkit-column-count: 3;
+    -moz-column-count: 3;
+    column-count: 3;
+    -webkit-column-fill: auto;
+    -moz-column-fill: auto;
+    column-fill: auto;
+    -moz-column-gap: 40px;
+    column-gap: 40px;
+    column-gap: 40px;
+    -webkit-column-rule: 2px solid snow;
+    -moz-column-rule: 2px solid snow;
+    column-rule: 2px solid snow;
+}
+
+div.Category {
+    position: fixed;
+    top: 1em;
+    left: 1em;
+    bottom: 1em;
+    right: 1em;
+    padding: 1em;
+    overflow: auto;
+    border: 2px solid snow;
+}
+
+div.CloseDiv {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 50px;
+    height: 50px;
+}
+
+div.Chronometer {
+	padding: 5px;
+	margin: 0px;
+	right: 2px;
+	bottom: 2px;
+	background-color: SteelBlue;
+	color: white;
+	border: 1px solid snow;
+	letter-spacing: 1px;
+}
+
+div.Reminder {
+	padding: 5px;
+	margin: 0px;
+	right: 2px;
+	bottom: 2px;
+	background-color: goldenrod;
+	color: #282828;
+	border: 1px solid snow;
+	letter-spacing: 1px;
+}
+
+div.Eve {
+	padding: 5px;
+	margin: 0px;
+	right: 2px;
+	bottom: 2px;
+	color: black;
+	background-color: DarkRed;
+}
+
+div.Reminder+div.Reminder {
+	border-top: 0px;
+}
+
+div.Chronometer+div.Chronometer {
+	border-top: 0px;
+}
+
+div.Icon {
+	padding: 5px;
+	position: relative;
+	margin: 0px;
+	right: 2px;
+	bottom: 2px;
+	background-color: lightyellow;
+	color: DarkGoldenRod;
+	border: 1px solid black;
+	letter-spacing: 1px;
+}
+
+span.Difference {
+	font-weight: bold;
+	color: snow;
+	background-color: SteelBlue;
+}
+
+span.Eve {
+	color: black;
+	background-color: DarkRed;
+}
+
+span.Example {
+	color: CornflowerBlue;
+	font-size: small;
+	font-family: tahoma, sans-serif;
+	margin-left: 1em;
+}
+
+span.Spacer:not(:last-child):before {
+    content: " ~ ";
+    color: snow;
+}

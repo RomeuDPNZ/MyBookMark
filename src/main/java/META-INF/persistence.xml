@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+	<persistence-unit name="MyBookMarkPersistence">
+		<class>mybookmark.dao.Categories</class> 
+		<class>mybookmark.dao.Divs</class>
+		<class>mybookmark.dao.Links</class>
+		<class>mybookmark.dao.MyBookMark</class>
+		<class>mybookmark.dao.Settings</class>
+		<class>mybookmark.dao.Categorized</class>
+		<class>mybookmark.dao.Reminder</class>
+		<class>mybookmark.dao.Timers</class>
+		<class>mybookmark.dao.Chronometer</class>
+		<class>mybookmark.dao.Countdown</class>
+		<class>mybookmark.dao.MonthlyReminder</class>
+		<class>mybookmark.dao.AnnualReminder</class>
+		<properties>
+			<property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
+			<property name="javax.persistence.jdbc.user" value="mybookmarkhibernate" />
+			<property name="javax.persistence.jdbc.password" value="" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/mybookmark" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLInnoDBDialect" />
+			<property name="hibernate.show_sql" value="false" />
+            <property name="hibernate.format_sql" value="false" />
+		</properties>
+	</persistence-unit>
+</persistence>

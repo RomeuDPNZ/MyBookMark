@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html ng-app="bmIndex" xmlns="http://www.w3.org/1999/xhtml" xml:lang="pt-br" lang="pt-br">
+ 
+<head>
+ 
+<title>My Bookmark</title>
+ 
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+
+<link href="resources/images/mybookmark.ico" rel="icon" type="image/x-icon" />
+<link href='http://fonts.googleapis.com/css?family=Roboto:500' rel='stylesheet' type='text/css' />
+<link href="resources/css/mybookmarkdark.css?v=2" rel='stylesheet' type='text/css' /> 
+
+<script src="resources/js/jquery-3.5.1.min.js"></script>
+<script src="resources/js/jquery-ui.js"></script>
+<script src="resources/js/moment.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-route/1.8.2/angular-route.js"></script>
+<script type="text/javascript"> 
+//<![CDATA[
+
+var app = angular.module('bmIndex', ['ngRoute']);
+
+app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile) {
+	
+	$scope.divEditCategory = [];
+	$scope.divEditCRUDCategory = [];
+	$scope.DivsSelectHTML = '';
+	$scope.showLoading = false;
+	$scope.onlyLettersAndNumbersRegex = '^[a-zA-Z0-9 ]+$';
+	var dataTimeout = [];
+	
+	$scope.validateURL = function(url) {
+		return /^.+$/g.test(url);
+	}
+	
+	$scope.validateDateAndTime = function(dateToValidate) {
+		return moment(dateToValidate,"YYYY-MM-DD HH:mm:ss", true).isValid();
+	}
+	
+	$scope.validateNames = function(names){
+		 return /^[a-zA-Z0-9\s]+$/g.test(names);
+	}
+	
+	function hasWhiteSpace(s) {
+		return (s.toString().indexOf(" ") >= 0);
+	}
+	
+	$scope.validateNumbers = function(number) {
+		if(hasWhiteSpace(number)) {
+			return false;
+		}
+		return /^[0-9]+$/g.test(number);
+	}
+	
+	$scope.isTodayOrBeforeOrAfter = function(day, daysBefore, daysAfter) {
+		var d = new Date();
+		var is = false;
+
+	    if(moment().isBetween(moment({'date': day}).subtract(daysBefore, 'days'), moment({'date': day}).add(daysAfter, 'days'))) {
+	        is = true;
+	    }
+
+		return is;
+	}
+
+	$scope.isTodayOrBeforeOrAfterOutro = function(day, month, daysBefore, daysAfter) {
+		var d = new Date();
+		var is = false;
+	    --month;
+
+	    if(moment().isBetween(moment({'date': day, 'month': month}).subtract(daysBefore, 'days'), moment({'date': day, 'month': month}).add(daysAfter, 'days'))) {
+	        is = true;
+	    }
+
+		return is;
+	}
+
+	$scope.getMomentFromNow = function(date) {
+		var now = new Date();
+		var past = new Date(date);
+
+		var a = moment(now);
+		var b = moment(past);
+
+		var years = a.diff(b, 'years');
+		b.add(years, 'years');
+
+		var months = a.diff(b, 'months');
+		b.add(months, 'months');
+
+		var days = a.diff(b, 'days');
+
+		var objFacility = { years : years, months : months, days : days }
+		return objFacility;
+	}
+
+	$scope.getDaysAndTimeDifference = function(date) {
+		var now = new Date();
+		var future = new Date(date);
+		var daysDifference = 0;
+		var timeDifference = "00:00:00";
+		if(now < future) {
+			daysDifference = moment(future).diff(moment(now), "days");
+			timeDifference = moment.utc(moment(future,"DD/MM/YYYY HH:mm:ss").diff(moment(now,"DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss");
+		}
+		var objFacility = { d : daysDifference, t : timeDifference }
+		return objFacility;
+	}
+
+	$scope.twoDigit = function(number) {
+		return (number >= 10 ? number : "0"+number.toString());
+	}
+
+	$scope.Chronometer = function(date, chronometer, id, div) {
+		var objFacility = $scope.getMomentFromNow(date);
+
+		if($(div).find("span.Difference"+id).length < 1) {
+			$(div).append("<div class=\"Chronometer\"><span class=\"Difference"+id+" Difference\"></span> - "+chronometer+"</div>");
+		}
+
+		if(objFacility.d < 1) {
+			$("span.Difference"+id).parent().addClass("Eve");
+			$("span.Difference"+id).addClass("Eve");
+		}
+
+		$("span.Difference"+id).text(objFacility.years+" year(s) "+objFacility.months+" month(s) "+objFacility.days+" day(s)");
+
+		/*
+		var timeOut = $timeout(function(){
+			$scope.Chronometer(date, chronometer, id, div);
+			dataTimeout.push(timeOut);
+		},1000);
+		*/
+	}
+	
+	$scope.CountDown = function(date, compromisso, id, div) {
+		var objFacility = $scope.getDaysAndTimeDifference(date);
+
+		if($(div).find("span.Difference"+id).length < 1) {
+			angular.element(div).append("<div class=\"Chronometer\"><span class=\"Difference"+id+" Difference\"></span> - "+compromisso+"</div>");
+		}
+
+		if(objFacility.d < 1) {
+			$("span.Difference"+id).parent().addClass("Eve");
+			$("span.Difference"+id).addClass("Eve");
+		}
+
+		//$("span.Difference"+id+"").text(""+$scope.twoDigit(objFacility.d)+" day(s) and "+objFacility.t+" to "+date);
+		angular.element("span.Difference"+id+"").html(""+$scope.twoDigit(objFacility.d)+" day(s) and "+objFacility.t+" to "+date);
+	
+		/*
+		var timeOut = $timeout(function(){
+			$scope.CountDown(date, compromisso, id, div);
+			dataTimeout.push(timeOut);
+		},1000);
+		*/
+	}
+
+	$scope.MonthlyReminder = function(day, message, daysBefore, daysAfter, div) {
+	    if($scope.isTodayOrBeforeOrAfter(day, daysBefore, daysAfter)) {
+			$(div).append("<div class=\"Reminder\">"+message+"</div>");
+		}
+	}
+
+	$scope.AnnualReminder = function(day, month, message, daysBefore, daysAfter, div) {
+	    if($scope.isTodayOrBeforeOrAfterOutro(day, month, daysBefore, daysAfter)) {
+			$(div).append("<div class=\"Reminder\">"+message+"</div>");
+		}
+	}
+	
+	$scope.HideDivsSelectHTML = function() {
+		$scope.DivsSelectHTML = '';
+    }
+	
+	$scope.showEditCategory = false;
+
+	$scope.ShowEditCategory = function(id, category) {
+		$scope.showEditCategory = true;
+		$scope.HideDivsSelectHTML();
+		$scope.divEditCategory.id = id;
+		$scope.divEditCategory.category = category;
+    }
+	
+	$scope.HideEditCategory = function() {
+		$scope.showEditCategory = false;
+    }
+	
+	$scope.showEditCRUDCategory = false;
+
+	$scope.ShowEditCRUDCategory = function(id) {
+		$scope.showEditCRUDCategory = true;
+		$scope.HideDivsSelectHTML();
+		$scope.divEditCRUDCategory.id = id;
+    }
+	
+	$scope.HideEditCRUDCategory = function() {
+		$scope.showEditCRUDCategory = false;
+    }
+	
+	$scope.showEditDivs = false;
+
+	$scope.ShowEditDivs = function() {
+		$scope.showEditDivs = true;
+    }
+	
+	$scope.HideEditDivs = function() {
+		$scope.showEditDivs = false;
+    }
+	
+	$scope.EditLink = function(idDiv, idCategory, idLink, name, link, description) {
+		$scope.showLoading = true;
+		
+		$http({
+			method: "POST",
+            url: 'EditLink',
+            params: {
+            	id: idLink,
+            	name: name,
+            	link: link,
+            	description: description
+            }
+        }).then(function successCallback(response) {
+        	$scope.LoadPage();
+        	$scope.showLoading = false;
+        }, function errorCallback(response) {
+
+        });
+    }
+	
+	$scope.EditTimers = function(idDiv, idCategory, idTimers, name, dateOf, description, typeClass) {
+		$scope.showLoading = true;
+		
+		$http({
+			method: "POST",
+            url: 'EditTimers',
+            params: {
+            	idTimers: idTimers,
+            	name: name,
+            	dateOf: dateOf,
+            	description: description,
+            	typeClass: typeClass
+            }
+        }).then(function successCallback(response) {
+        	$scope.LoadPage();
+        	$scope.showLoading = false;
+        }, function errorCallback(response) {
+
+        });
+    }
+	
+	$scope.EditReminders = function(idDiv, idCategory, idReminders, name, day, month, daysBefore, daysAfter, description, typeClass) {
+		$scope.showLoading = true;
+		
+		$http({
+			method: "POST",
+            url: 'EditReminders',
+            params: {
+            	idReminders: idReminders,
+            	name: name,
+            	day: day,
+            	month: month,
+            	daysBefore: daysBefore,
+            	daysAfter: daysAfter,
+            	description: description,
+            	typeClass: typeClass
+            }
+        }).then(function successCallback(response) {
+        	$scope.LoadPage();
+        	$scope.showLoading = false;
+        }, function errorCallback(response) {
+
+        });
+    }
+	
+	$scope.EditDiv = function(id, name, description) {
+		$scope.showLoading = true;
+		
+		$http({
+			method: "POST",
+            url: 'EditDiv',
+            params: {
+            	id: id,
+            	name: name,
+            	description: description
+            }
+        }).then(function successCallback(response) {
+        	$scope.LoadPage();
+        	$scope.showLoading = false;
+        }, function errorCallback(response) {
+
+        });
+    }
+	
+	$scope.DeleteDiv = function(id) {
+		$scope.showLoading = true;
+		
+		$http({
+			method: "POST",
+            url: 'DeleteDiv',
+            params: {
+            	id: id
+            }
+        }).then(function successCallback(response) {
+        	$scope.LoadPage();
+        	$scope.showLoading = false;
+        }, function errorCallback(response) {
+
+        });
+    }
+	
+	$scope.InsertDiv = function() {
+		$scope.showLoading = true;
+		
+		$http({
+			method: "POST",
+            url: 'InsertDiv',
+            params: { }
+        }).then(function successCallback(response) {
+        	$scope.LoadPage();
+        	$scope.showLoading = false;
+        }, function errorCallback(response) {
+
+        });
+    }
+	
+	$scope.EditCategory = function(id, name, description) {
+		$scope.showLoading = true;
+		
+		$http({
+			method: "POST",
+            url: 'EditCategory',
+            params: {
+            	id: id,
+            	name: name,
+            	description: description
+            }
+        }).then(function successCallback(response) {
+        	$scope.LoadPage();
+        	$scope.showLoading = false;
+        }, function errorCallback(response) {
+
+        });
+    }
+	
+	$scope.DeleteCategory = function(id) {
+		$scope.showLoading = true;
+		
+		$http({
+			method: "POST",
+            url: 'DeleteCategory',
+            params: {
+            	id: id
+            }
+        }).then(function successCallback(response) {
+        	$scope.LoadPage();
+        	$scope.showLoading = false;
+        }, function errorCallback(response) {
+
+        });
+    }
+	
+	$scope.InsertCategory = function(id) {
+		$scope.showLoading = true;
+		
+		$http({
+			method: "POST",
+            url: 'InsertCategory',
+            params: {
+            	id: id
+            }
+        }).then(function successCallback(response) {
+        	$scope.LoadPage();
+        	$scope.showLoading = false;
+        }, function errorCallback(response) {
+
+        });
+    }
+	
+	$scope.Delete = function(idDiv, idCategory, idElement, typeClass) {
+		$scope.showLoading = true;
+		
+		$http({
+			method: "POST",
+            url: 'Delete',
+            params: {
+            	idElement: idElement,
+            	typeClass: typeClass
+            }
+        }).then(function successCallback(response) {
+        	$scope.LoadPage();
+        	$scope.showLoading = false;
+        }, function errorCallback(response) {
+
+        });
+    }
+	
+	$scope.Insert = function(idDiv, idCategory, typeClass) {
+		$scope.showLoading = true;
+		
+		$http({
+			method: "POST",
+            url: 'Insert',
+            params: {
+            	idDiv: idDiv,
+            	idCategory: idCategory,
+            	typeClass: typeClass
+            }
+        }).then(function successCallback(response) {
+        	$scope.LoadPage();
+        	$scope.showLoading = false;
+        }, function errorCallback(response) {
+
+        });
+    }
+	
+	$scope.LoadPage = function() {
+		
+		$scope.showLoading = true;
+		
+		/*
+		$scope.$on("$destroy", function () {
+		    dataTimeout.forEach(function(timeout){
+		       $timeout.cancel(timeout);    
+		    });
+		});
+		*/
+		
+		$http({
+			method: "POST",
+			url: 'SelectDivs',
+      	  	params: { }
+    	}).then(function successCallback(response) {
+    		$scope.responseSelectDivs = response.data;
+    		
+    		console.log($scope.responseSelectDivs);
+    	
+    		angular.element("div.DivThreeColumns").empty();
+    		angular.element("span.DivsBottom").empty();
+      	
+    		$scope.divLeft = $scope.responseSelectDivs.filter(function(response){
+   	     		return response.position === 'LEFT'
+   			});
+    	
+    		$scope.divCenter = $scope.responseSelectDivs.filter(function(response){
+   	     		return response.position === 'CENTER'
+   			});
+    	
+    		$scope.divRight = $scope.responseSelectDivs.filter(function(response){
+   	     		return response.position === 'RIGHT'
+   			});
+    	
+    		$scope.divsTop = $scope.responseSelectDivs.filter(function(response){
+   	     		return response.position != 'BOTTOM'
+   			});
+ 
+    		$scope.divBottom = $scope.responseSelectDivs.filter(function(response){
+      	     	return response.position === 'BOTTOM'
+      		});
+    	
+    		angular.forEach($scope.responseSelectDivs, function (value, index){
+    		
+    			var divId = value.id;
+    			var divName = value.name.replace(/[\W_]/g,"")+"Legend";
+    			var idAndNameDiv = divName+divId;
+    			var position = value.position;
+    			var toCompile;
+  
+    			if(position != 'BOTTOM') {
+    				toCompile = angular.element("div.DivThreeColumns").append("<div class=\"ForFieldsetThreeColumns\">"+
+    						"<fieldset class=\"FieldsetThreeColumns\">"+
+    						"<legend class=\""+divName+"\">"+value.name+"</legend>"+
+    						"<button class=\"EditCRUDButton\" ng-click=\"ShowEditCRUDCategory("+divId+")\">CRUD Categories</button>"+
+    						"</fieldset>"+
+    						"</div>");	
+    			} else {   			
+    				toCompile = angular.element("span.DivsBottom").append("<div ng-if=\"DivsSelectHTML == '"+value.name+"'\" class=\"Category\">"+
+						"<div class=\"Column Column"+divName+"\">"+
+						"<button class=\"EditCRUDButton\" ng-click=\"ShowEditCRUDCategory("+divId+")\">CRUD Categories</button>"+
+						"<div class=\"CloseDiv\">"+
+						"<img class=\"CloseDivImage\" ng-click=\"HideDivsSelectHTML()\" src=\"resources/images/red.png\" alt=\"\" width=\"50\" height=\"50\" />"+
+						"</div></div></div>");	
+    			}
+    	   
+    			angular.forEach(value.categories, function(value, index){
+        	    	
+        	    	var idCategory = value.id;
+        	    	var spanEditButton = "SpanEditCategory";
+        	    	
+        	    	if(position != 'BOTTOM') {
+    	    	    	angular.element("<div class=\""+idAndNameDiv+idCategory+"\"></div>").insertAfter("legend."+divName+"");
+        	    	} else {
+        	    		angular.element("div.Column"+divName).append("<div class=\""+idAndNameDiv+idCategory+"\"></div>");
+        	    		spanEditButton = "SpanBottomEditCategory";
+        	    	}	
+        	    	
+        	    	//if (typeof value.links !== 'undefined' && value.links.length > 0) {
+        	    		angular.element("div."+idAndNameDiv+idCategory).append("<div><h3 class=\"h3"+idCategory+"Links\">"+value.name+" "+
+        	    																"<span class=\""+spanEditButton+"\" ng-click=\"ShowEditCategory("+divId+","+idCategory+")\">Edit</span>"+
+        	    																"</h3></div>");  	   
+        	    		angular.element("div."+idAndNameDiv+idCategory).append("<div class=\"Links"+idCategory+"\"></div><br />");
+    				//}
+        	    	
+        	    	if (typeof value.chronometer !== 'undefined' && value.chronometer.length > 0) {
+        	    		angular.element("div."+idAndNameDiv+idCategory).append("<h3 class=\"h3"+idCategory+"Chronometers\">Chronometers</h3><br />");
+        	    		angular.element("div."+idAndNameDiv+idCategory).append("<div class=\"Chronometers"+idCategory+"\"></div><br />");
+    				}
+        	    	
+        	    	if (typeof value.countdown !== 'undefined' && value.countdown.length > 0) {
+           	    		angular.element("div."+idAndNameDiv+idCategory).append("<h3 class=\"h3"+idCategory+"Countdowns\">Countdowns</h3><br />");
+        	    		angular.element("div."+idAndNameDiv+idCategory).append("<div class=\"Countdowns"+idCategory+"\"></div><br />")   	    	
+    				}
+        	    	
+        	    	if (typeof value.monthlyReminder !== 'undefined' && value.monthlyReminder.length > 0) {
+           	    		angular.element("div."+idAndNameDiv+idCategory).append("<h3 class=\"h3"+idCategory+"MonthlyReminders\">Monthly Reminders</h3><br />");
+        	    		angular.element("div."+idAndNameDiv+idCategory).append("<div class=\"MonthlyReminders"+idCategory+"\"></div><br />")     	    	
+    				}
+        	    	
+        	    	if (typeof value.annualReminder !== 'undefined' && value.annualReminder.length > 0) {
+           	    		angular.element("div."+idAndNameDiv+idCategory).append("<h3 class=\"h3"+idCategory+"AnnualReminders\">Annual Reminders</h3><br />");
+        	    		angular.element("div."+idAndNameDiv+idCategory).append("<div class=\"AnnualReminders"+idCategory+"\"></div><br />") 	    	
+    				}
+        	    	
+        	        angular.forEach(value.links, function (value, index){
+            	    	if(position != 'BOTTOM') {
+            	    		angular.element("div.Links"+idCategory).append("<a href=\""+value.link+"\">"+value.name+"</a><span class=\"Spacer\"></span>");
+            	    	} else {
+            	    		angular.element("div.Links"+idCategory).append("<a href=\""+value.link+"\">"+value.name+"</a><span class=\"Example\">"+value.description+"</span><br />");
+            	    	}
+        	        	/*if (!(index === array.length - 1)) {
+        	        		angular.element("div.Links"+idCategory).append("<span style=\"color: snow;\"> ~ </span>");
+        	        	}*/
+        	        });
+        	        
+        	        angular.forEach(value.chronometer, function (value, index){
+        	        	$scope.Chronometer(value.dateOf, value.name, "Chronometers"+value.id, "div.Chronometers"+idCategory);
+        	        });
+        	        
+        	        angular.forEach(value.countdown, function (value, index){
+        	        	$scope.CountDown(value.dateOf, value.name, "Countdowns"+value.id, "div.Countdowns"+idCategory);
+        	        });
+        	        
+        	        angular.forEach(value.annualReminder, function (value, index){
+        	        	$scope.AnnualReminder(value.day, value.month, value.name, value.daysBefore, value.daysAfter, "div.AnnualReminders"+idCategory);
+        	        });
+        	        
+        	        angular.forEach(value.monthlyReminder, function (value, index){
+        	        	$scope.MonthlyReminder(value.day, value.name, value.daysBefore, value.daysAfter, "div.MonthlyReminders"+idCategory);
+        	        });
+        	        
+        		});
+    		
+    			$compile(toCompile)($scope);
+    		
+    		});
+    	
+    	}, function errorCallback(response) {
+
+    	});
+	
+		$scope.showLoading = false;
+	
+	}
+	
+	$scope.LoadPage();
+
+});
+
+//]]>
+</script>
+
+</head>
+
+<body ng-controller="SelectDivs">
+
+	<div ng-if="showLoading" style="position:absolute; right:2em; top:7em; width:100px; height:100px; z-index:1000;">
+		<img src="resources/images/ajax-loader-GoldenRod.gif" alt="" width="100" height="100" />
+	</div>
+
+	<div class="DivThreeColumns"></div>
+
+	<div class="ControlsFrontPage">
+		<select ng-model="DivsSelectHTML">
+			<option ng-repeat="x in divBottom" id="{{x.id}}" value="{{x.name}}">{{x.name}}</option>
+		</select>
+		<br /><br />
+		<button ng-click="ShowEditDivs()">Edit Divs...</button>
+	</div>
+
+	<div class="DivEditCategory" ng-model="divEditCategory" ng-if="showEditCategory == true">
+
+		<div ng-repeat="x in responseSelectDivs | filter: { id: divEditCategory.id }">
+			<div ng-repeat="c in x.categories | filter: { id: divEditCategory.category }">
+			
+				<div>Div: {{x.name}} - Category: {{c.name}} - Position: {{x.position}}</div>
+			
+				<br />
+			
+				<table>
+					<caption>Links</caption>
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Name</th>
+							<th>Link</th>
+							<th>Description</th>
+							<th>Created On</th>
+							<th>Last Updated On</th>
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="e in c.links">
+							<td>{{e.id}}</td>
+							<td>
+								<input type="text" ng-model="e.name" value="{{e.name}}" />
+								<span class="emoji happy" ng-if="validateNames(e.name)">&#128512;</span>
+								<span class="emoji sad" ng-if="!validateNames(e.name)">&#129324;</span>
+							</td>
+							<td>
+								<input type="text" ng-model="e.link" value="{{e.link}}" />
+								<span class="emoji happy" ng-if="validateURL(e.link)">&#128512;</span>
+								<span class="emoji sad" ng-if="!validateURL(e.link)">&#129324;</span>
+							</td>
+							<td>
+								<input type="text" ng-model="e.description" value="{{e.description}}" />
+								<span class="emoji happy" ng-if="validateNames(e.description)">&#128512;</span>
+								<span class="emoji sad" ng-if="!validateNames(e.description)">&#129324;</span>
+							</td>
+							<td>{{e.createdOn}}</td>
+							<td>{{e.lastUpdatedOn}}</td>
+							<td><button ng-disabled="!validateNames(e.name) || !validateURL(e.link) || !validateNames(e.description)"
+										ng-click="EditLink(x.id, c.id, e.id, e.name, e.link, e.description)">Edit</button></td>
+							<td><button ng-click="Delete(x.id, c.id, e.id, 'Link')">Delete</button></td>
+						</tr>
+						<tr>
+							<td colspan="8"><button ng-click="Insert(x.id, c.id, 'Link')">Insert</button></td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<br />
+				
+				<table>
+					<caption>Chronometers</caption>
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Name</th>
+							<th>Date Of</th>
+							<th>Description</th>
+							<th>Created On</th>
+							<th>Last Updated On</th>
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="e in c.chronometer">
+							<td><span>{{e.id}}</span></td>
+							<td>
+								<input type="text" ng-model="e.name" value="{{e.name}}" />
+								<span class="emoji happy" ng-if="validateNames(e.name)">&#128512;</span>
+								<span class="emoji sad" ng-if="!validateNames(e.name)">&#129324;</span>
+							</td>
+							<td>
+								<input type="text" ng-model="e.dateOf" value="{{e.dateOf}}" />
+								<span class="emoji happy" ng-if="validateDateAndTime(e.dateOf)">&#128512;</span>
+								<span class="emoji sad" ng-if="!validateDateAndTime(e.dateOf)">&#129324;</span>
+							</td>
+							<td>
+								<input type="text" ng-model="e.description" value="{{e.description}}" />
+								<span class="emoji happy" ng-if="validateNames(e.description)">&#128512;</span>
+								<span class="emoji sad" ng-if="!validateNames(e.description)">&#129324;</span>
+							</td>
+							<td><span>{{e.createdOn}}</span></td>
+							<td><span>{{e.lastUpdatedOn}}</span></td>
+							<td><button ng-disabled="!validateDateAndTime(e.dateOf) || !validateNames(e.name) || !validateNames(e.description)" 
+										ng-click="EditTimers(x.id, c.id, e.id, e.name, e.dateOf, e.description, 'Chronometer')">Edit</button></td>
+							<td><button ng-click="Delete(x.id, c.id, e.id, 'Chronometer')">Delete</button></td>
+						</tr>
+						<tr>
+							<td colspan="8"><button ng-click="Insert(x.id, c.id, 'Chronometer')">Insert</button></td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<br />
+				
+				<table>
+					<caption>Countdowns</caption>
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Name</th>
+							<th>Date Of</th>
+							<th>Description</th>
+							<th>Created On</th>
+							<th>Last Updated On</th>
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="e in c.countdown">
+							<td><span>{{e.id}}</span></td>
+							<td>
+								<input type="text" ng-model="e.name" value="{{e.name}}" />
+								<span class="emoji happy" ng-if="validateNames(e.name)">&#128512;</span>
+								<span class="emoji sad" ng-if="!validateNames(e.name)">&#129324;</span>
+							</td>
+							<td>
+								<input type="text" ng-model="e.dateOf" value="{{e.dateOf}}" />
+								<span class="emoji happy" ng-if="validateDateAndTime(e.dateOf)">&#128512;</span>
+								<span class="emoji sad" ng-if="!validateDateAndTime(e.dateOf)">&#129324;</span>
+							</td>
+							<td>
+								<input type="text" ng-model="e.description" value="{{e.description}}" />
+								<span class="emoji happy" ng-if="validateNames(e.description)">&#128512;</span>
+								<span class="emoji sad" ng-if="!validateNames(e.description)">&#129324;</span>
+							</td>
+							<td><span>{{e.createdOn}}</span></td>
+							<td><span>{{e.lastUpdatedOn}}</span></td>
+							<td><button ng-disabled="!validateDateAndTime(e.dateOf) || !validateNames(e.name) || !validateNames(e.description)"
+										ng-click="EditTimers(x.id, c.id, e.id, e.name, e.dateOf, e.description, 'Countdown')">Edit</button></td>
+							<td><button ng-click="Delete(x.id, c.id, e.id, 'Countdown')">Delete</button></td>
+						</tr>
+						<tr>
+							<td colspan="8"><button ng-click="Insert(x.id, c.id, 'Countdown')">Insert</button></td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<br />
+				
+				<table>
+					<caption>Monthly Reminders</caption>
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Name</th>
+							<th>Day</th>
+							<th>Days Before</th>
+							<th>Days After</th>
+							<th>Description</th>
+							<th>Created On</th>
+							<th>Last Updated On</th>
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="e in c.monthlyReminder">
+							<td><span>{{e.id}}</span></td>
+							<td>
+								<input type="text" ng-model="e.name" value="{{e.name}}" />
+								<span class="emoji happy" ng-if="validateNames(e.name)">&#128512;</span>
+								<span class="emoji sad" ng-if="!validateNames(e.name)">&#129324;</span>
+							</td>
+							<td>
+								<input type="text" ng-model="e.day" value="{{e.day}}" size="6" ng-trim="true" />
+								<span class="emoji happy" ng-if="validateNumbers(e.day)">&#128512;</span>
+								<span class="emoji sad" ng-if="!validateNumbers(e.day)">&#129324;</span>
+							</td>
+							<td>
+								<input type="text" ng-model="e.daysBefore" value="{{e.daysBefore}}" size="6" ng-trim="true" />
+								<span class="emoji happy" ng-if="validateNumbers(e.daysBefore)">&#128512;</span>
+								<span class="emoji sad" ng-if="!validateNumbers(e.daysBefore)">&#129324;</span>
+							</td>
+							<td>
+								<input type="text" ng-model="e.daysAfter" value="{{e.daysAfter}}" size="6" ng-trim="true" />
+								<span class="emoji happy" ng-if="validateNumbers(e.daysAfter)">&#128512;</span>
+								<span class="emoji sad" ng-if="!validateNumbers(e.daysAfter)">&#129324;</span>
+							</td>
+							<td>
+								<input type="text" ng-model="e.description" value="{{e.description}}" />
+								<span class="emoji happy" ng-if="validateNames(e.description)">&#128512;</span>
+								<span class="emoji sad" ng-if="!validateNames(e.description)">&#129324;</span>
+							</td>
+							<td><span>{{e.createdOn}}</span></td>
+							<td><span>{{e.lastUpdatedOn}}</span></td>
+							<td><button ng-disabled="!validateNumbers(e.day) || !validateNumbers(e.daysBefore) || 
+													!validateNumbers(e.daysAfter) || !validateNames(e.name) || !validateNames(e.description)"
+										ng-click="EditReminders(x.id, c.id, e.id, e.name, e.day, 0, e.daysBefore, e.daysAfter, e.description, 'Monthly')">Edit</button></td>
+							<td><button ng-click="Delete(x.id, c.id, e.id, 'Monthly')">Delete</button></td>
+						</tr>
+						<tr>
+							<td colspan="10"><button ng-click="Insert(x.id, c.id, 'Monthly')">Insert</button></td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<br />
+				
+				<table>
+					<caption>Annual Reminders</caption>
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Name</th>
+							<th>Day</th>
+							<th>Month</th>
+							<th>Days Before</th>
+							<th>Days After</th>
+							<th>Description</th>
+							<th>Created On</th>
+							<th>Last Updated On</th>
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="e in c.annualReminder">
+							<td><span>{{e.id}}</span></td>
+							<td>
+								<input type="text" ng-model="e.name" value="{{e.name}}" />
+								<span class="emoji happy" ng-if="validateNames(e.name)">&#128512;</span>
+								<span class="emoji sad" ng-if="!validateNames(e.name)">&#129324;</span>
+							</td>
+							<td>
+								<input type="text" ng-model="e.day" value="{{e.day}}" size="6" ng-trim="true" />
+								<span class="emoji happy" ng-if="validateNumbers(e.day)">&#128512;</span>
+								<span class="emoji sad" ng-if="!validateNumbers(e.day)">&#129324;</span>
+							</td>
+							<td>
+								<input type="text" ng-model="e.month" value="{{e.month}}" size="6" ng-trim="true" />
+								<span class="emoji happy" ng-if="validateNumbers(e.month)">&#128512;</span>
+								<span class="emoji sad" ng-if="!validateNumbers(e.month)">&#129324;</span>
+							</td>
+							<td>
+								<input type="text" ng-model="e.daysBefore" value="{{e.daysBefore}}" size="6" ng-trim="true" />
+								<span class="emoji happy" ng-if="validateNumbers(e.daysBefore)">&#128512;</span>
+								<span class="emoji sad" ng-if="!validateNumbers(e.daysBefore)">&#129324;</span>
+							</td>
+							<td>
+								<input type="text" ng-model="e.daysAfter" value="{{e.daysAfter}}" size="6" ng-trim="true" />
+								<span class="emoji happy" ng-if="validateNumbers(e.daysAfter)">&#128512;</span>
+								<span class="emoji sad" ng-if="!validateNumbers(e.daysAfter)">&#129324;</span>
+							</td>
+							<td>
+								<input type="text" ng-model="e.description" value="{{e.description}}" />
+								<span class="emoji happy" ng-if="validateNames(e.description)">&#128512;</span>
+								<span class="emoji sad" ng-if="!validateNames(e.description)">&#129324;</span>
+							</td>
+							<td><span>{{e.createdOn}}</span></td>
+							<td><span>{{e.lastUpdatedOn}}</span></td>
+							<td><button ng-disabled="!validateNumbers(e.day) || !validateNumbers(e.month) || !validateNumbers(e.daysBefore) || 
+													!validateNumbers(e.daysAfter) || !validateNames(e.name) || !validateNames(e.description)"
+										ng-click="EditReminders(x.id, c.id, e.id, e.name, e.day, e.month, e.daysBefore, e.daysAfter, e.description, 'Annual')">Edit</button></td>
+							<td><button ng-click="Delete(x.id, c.id, e.id, 'Annual')">Delete</button></td>
+						</tr>
+						<tr>
+							<td colspan="11"><button ng-click="Insert(x.id, c.id, 'Annual')">Insert</button></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div class="CloseDiv">
+			<img class="CloseDivImage" ng-click="HideEditCategory()" src="resources/images/red.png" alt="" width="50" height="50" />
+		</div>
+	</div>
+
+	<div class="DivEditCRUDCategory" ng-model="divEditCRUDCategory" ng-if="showEditCRUDCategory == true">
+		<div ng-repeat="x in responseSelectDivs | filter: { id: divEditCRUDCategory.id }">
+
+			<div>Div: {{x.name}} - Position: {{x.position}}</div>
+
+			<br />
+
+			<table>
+				<caption>Categories</caption>
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>Name</th>
+						<th>Description</th>
+						<th>Created On</th>
+						<th>Last Updated On</th>
+						<th>Edit</th>
+						<th>Delete</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr
+						ng-repeat="e in x.categories">
+						<td>{{e.id}}</td>
+						<td>
+							<input type="text" ng-model="e.name" value="{{e.name}}" />
+							<span class="emoji happy" ng-if="validateNames(e.name)">&#128512;</span>
+							<span class="emoji sad" ng-if="!validateNames(e.name)">&#129324;</span>
+						</td>
+						<td>
+							<input type="text" ng-model="e.description" value="{{e.description}}" />
+							<span class="emoji happy" ng-if="validateNames(e.description)">&#128512;</span>
+							<span class="emoji sad" ng-if="!validateNames(e.description)">&#129324;</span>
+						</td>
+						<td>{{e.createdOn}}</td>
+						<td>{{e.lastUpdatedOn}}</td>
+						<td><button ng-disabled="!validateNames(e.name) || !validateNames(e.description)" 
+									ng-click="EditCategory(e.id, e.name, e.description)">Edit</button></td>
+						<td><button ng-click="DeleteCategory(e.id)">Delete</button></td>
+					</tr>
+					<tr>
+						<td colspan="7"><button ng-click="InsertCategory(x.id)">Insert</button></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div class="CloseDiv">
+				<img class="CloseDivImage" ng-click="HideEditCRUDCategory()"
+					src="resources/images/red.png" alt="" width="50" height="50" />
+			</div>
+		</div>
+	</div>
+
+	<div class="DivEditDivs" ng-model="divEditDivs" ng-if="showEditDivs == true">
+		<table>
+			<caption>Divs from the Front Page: LEFT, CENTER and RIGHT</caption>
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Name</th>
+					<th>Description</th>
+					<th>Position</th>
+					<th>Created On</th>
+					<th>Last Updated On</th>
+					<th>Edit</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="e in divsTop">
+					<td>{{e.id}}</td>
+					<td>
+						<input type="text" ng-model="e.name" value="{{e.name}}" />
+						<span class="emoji happy" ng-if="validateNames(e.name)">&#128512;</span>
+						<span class="emoji sad" ng-if="!validateNames(e.name)">&#129324;</span>
+					</td>
+					<td>
+						<input type="text" ng-model="e.description" value="{{e.description}}" />
+						<span class="emoji happy" ng-if="validateNames(e.description)">&#128512;</span>
+						<span class="emoji sad" ng-if="!validateNames(e.description)">&#129324;</span>
+					</td>
+					<td>{{e.position}}</td>
+					<td>{{e.createdOn}}</td>
+					<td>{{e.lastUpdatedOn}}</td>
+					<td><button ng-disabled="!validateNames(e.name) || !validateNames(e.description)" 
+								ng-click="EditDiv(e.id, e.name, e.description)">Edit</button></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<br />
+
+		<table>
+			<caption>Hidden Divs from the Bottom</caption>
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Name</th>
+					<th>Description</th>
+					<th>Position</th>
+					<th>Created On</th>
+					<th>Last Updated On</th>
+					<th>Edit</th>
+					<th>Delete</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="e in divBottom">
+					<td>{{e.id}}</td>
+					<td>
+						<input type="text" ng-model="e.name" value="{{e.name}}" />
+						<span class="emoji happy" ng-if="validateNames(e.name)">&#128512;</span>
+						<span class="emoji sad" ng-if="!validateNames(e.name)">&#129324;</span>
+					</td>
+					<td>
+						<input type="text" ng-model="e.description" value="{{e.description}}" />
+						<span class="emoji happy" ng-if="validateNames(e.description)">&#128512;</span>
+						<span class="emoji sad" ng-if="!validateNames(e.description)">&#129324;</span>
+					</td>
+					<td>{{e.position}}</td>
+					<td>{{e.createdOn}}</td>
+					<td>{{e.lastUpdatedOn}}</td>
+					<td><button ng-disabled="!validateNames(e.name) || !validateNames(e.description)" 
+							ng-click="EditDiv(e.id, e.name, e.description)">Edit</button></td>
+					<td><button ng-click="DeleteDiv(e.id)">Delete</button></td>
+				</tr>
+				<tr>
+					<td colspan="8"><button ng-click="InsertDiv()">Insert</button></td>
+				</tr>
+			</tbody>
+		</table>
+
+
+		<div class="CloseDiv">
+			<img class="CloseDivImage" ng-click="HideEditDivs()"
+				src="resources/images/red.png" alt="" width="50" height="50" />
+		</div>
+	</div>
+
+	<span class="DivsBottom"></span>
+
+</body>
+
+</html>
