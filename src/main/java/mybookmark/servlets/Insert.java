@@ -42,9 +42,9 @@ public class Insert extends HttpServlet {
 			} else if(typeClass.equals("Countdown")) {
 				mbm = new Countdown("New Countdown For Editing", "A description", "2030-09-30 00:00:00", idCategory);
 			} else if(typeClass.equals("Annual")) {
-				mbm = new AnnualReminder("Annual Reminder", "A description", 1l, 1l, 1000l, 1000l, idCategory);
+				mbm = new AnnualReminder("Annual Reminder", "A description", 1l, 1l, 5l, 5l, idCategory);
 			} else if(typeClass.equals("Monthly")) {
-				mbm = new MonthlyReminder("Monthly Reminder", "A description", 1l, 100l, 100l, idCategory);
+				mbm = new MonthlyReminder("Monthly Reminder", "A description", 1l, 5l, 5l, idCategory);
 			}
 			
 			mbmDAO.insert(mbm);

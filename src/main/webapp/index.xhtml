@@ -13,7 +13,8 @@
 
 <link href="resources/images/mybookmark.ico" rel="icon" type="image/x-icon" />
 <link href='http://fonts.googleapis.com/css?family=Roboto:500' rel='stylesheet' type='text/css' />
-<link href="resources/css/mybookmarkdark.css?v=2" rel='stylesheet' type='text/css' /> 
+<link href="resources/css/mybookmark.css?v=2" rel='stylesheet' type='text/css' /> 
+<link class="CSSLINK" href="" rel='stylesheet' type='text/css' /> 
 
 <script src="resources/js/jquery-3.5.1.min.js"></script>
 <script src="resources/js/jquery-ui.js"></script>
@@ -31,8 +32,7 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile)
 	$scope.divEditCRUDCategory = [];
 	$scope.DivsSelectHTML = '';
 	$scope.showLoading = false;
-	$scope.onlyLettersAndNumbersRegex = '^[a-zA-Z0-9 ]+$';
-	var dataTimeout = [];
+	$scope.theme = "LIGHT";
 	
 	$scope.validateURL = function(url) {
 		return /^.+$/g.test(url);
@@ -129,13 +129,6 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile)
 		}
 
 		$("span.Difference"+id).text(objFacility.years+" year(s) "+objFacility.months+" month(s) "+objFacility.days+" day(s)");
-
-		/*
-		var timeOut = $timeout(function(){
-			$scope.Chronometer(date, chronometer, id, div);
-			dataTimeout.push(timeOut);
-		},1000);
-		*/
 	}
 	
 	$scope.CountDown = function(date, compromisso, id, div) {
@@ -150,15 +143,7 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile)
 			$("span.Difference"+id).addClass("Eve");
 		}
 
-		//$("span.Difference"+id+"").text(""+$scope.twoDigit(objFacility.d)+" day(s) and "+objFacility.t+" to "+date);
 		angular.element("span.Difference"+id+"").html(""+$scope.twoDigit(objFacility.d)+" day(s) and "+objFacility.t+" to "+date);
-	
-		/*
-		var timeOut = $timeout(function(){
-			$scope.CountDown(date, compromisso, id, div);
-			dataTimeout.push(timeOut);
-		},1000);
-		*/
 	}
 
 	$scope.MonthlyReminder = function(day, message, daysBefore, daysAfter, div) {
@@ -418,17 +403,23 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile)
         });
     }
 	
-	$scope.LoadPage = function() {
-		
+	$scope.EditSettings = function() {
 		$scope.showLoading = true;
 		
-		/*
-		$scope.$on("$destroy", function () {
-		    dataTimeout.forEach(function(timeout){
-		       $timeout.cancel(timeout);    
-		    });
-		});
-		*/
+		$http({
+			method: "POST",
+            url: 'EditSettings',
+            params: { }
+        }).then(function successCallback(response) {
+        	$scope.LoadPage();
+        }, function errorCallback(response) {
+
+        });
+		
+		$scope.showLoading = false;
+    }
+	
+	$scope.LoadPage = function() {
 		
 		$http({
 			method: "POST",
@@ -473,14 +464,15 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile)
     			if(position != 'BOTTOM') {
     				toCompile = angular.element("div.DivThreeColumns").append("<div class=\"ForFieldsetThreeColumns\">"+
     						"<fieldset class=\"FieldsetThreeColumns\">"+
-    						"<legend class=\""+divName+"\">"+value.name+"</legend>"+
-    						"<button class=\"EditCRUDButton\" ng-click=\"ShowEditCRUDCategory("+divId+")\">CRUD Categories</button>"+
+    						"<legend>"+value.name+" - <span class=\"SpanEditCRUDButton\" ng-click=\"ShowEditCRUDCategory("+divId+")\">Edit</span></legend>"+
+    						"<div class=\"Edit "+divName+"\"></div>"+
     						"</fieldset>"+
     						"</div>");	
     			} else {   			
     				toCompile = angular.element("span.DivsBottom").append("<div ng-if=\"DivsSelectHTML == '"+value.name+"'\" class=\"Category\">"+
 						"<div class=\"Column Column"+divName+"\">"+
-						"<button class=\"EditCRUDButton\" ng-click=\"ShowEditCRUDCategory("+divId+")\">CRUD Categories</button>"+
+						"<h3>"+value.name+" - "+value.description+"</h3><br />"+
+						"<div class=\"EditColumn\"><button class=\"EditCRUDButton\" ng-click=\"ShowEditCRUDCategory("+divId+")\">Edit</button></div>"+
 						"<div class=\"CloseDiv\">"+
 						"<img class=\"CloseDivImage\" ng-click=\"HideDivsSelectHTML()\" src=\"resources/images/red.png\" alt=\"\" width=\"50\" height=\"50\" />"+
 						"</div></div></div>");	
@@ -492,18 +484,16 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile)
         	    	var spanEditButton = "SpanEditCategory";
         	    	
         	    	if(position != 'BOTTOM') {
-    	    	    	angular.element("<div class=\""+idAndNameDiv+idCategory+"\"></div>").insertAfter("legend."+divName+"");
+    	    	    	angular.element("div."+divName+"").append("<div class=\""+idAndNameDiv+idCategory+"\"></div>");
         	    	} else {
         	    		angular.element("div.Column"+divName).append("<div class=\""+idAndNameDiv+idCategory+"\"></div>");
         	    		spanEditButton = "SpanBottomEditCategory";
         	    	}	
         	    	
-        	    	//if (typeof value.links !== 'undefined' && value.links.length > 0) {
-        	    		angular.element("div."+idAndNameDiv+idCategory).append("<div><h3 class=\"h3"+idCategory+"Links\">"+value.name+" "+
+        	    	angular.element("div."+idAndNameDiv+idCategory).append("<div><h3 class=\"h3"+idCategory+"Links\">"+value.name+" "+
         	    																"<span class=\""+spanEditButton+"\" ng-click=\"ShowEditCategory("+divId+","+idCategory+")\">Edit</span>"+
         	    																"</h3></div>");  	   
-        	    		angular.element("div."+idAndNameDiv+idCategory).append("<div class=\"Links"+idCategory+"\"></div><br />");
-    				//}
+        	    	angular.element("div."+idAndNameDiv+idCategory).append("<div class=\"Links"+idCategory+"\"></div><br />");
         	    	
         	    	if (typeof value.chronometer !== 'undefined' && value.chronometer.length > 0) {
         	    		angular.element("div."+idAndNameDiv+idCategory).append("<h3 class=\"h3"+idCategory+"Chronometers\">Chronometers</h3><br />");
@@ -531,9 +521,6 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile)
             	    	} else {
             	    		angular.element("div.Links"+idCategory).append("<a href=\""+value.link+"\">"+value.name+"</a><span class=\"Example\">"+value.description+"</span><br />");
             	    	}
-        	        	/*if (!(index === array.length - 1)) {
-        	        		angular.element("div.Links"+idCategory).append("<span style=\"color: snow;\"> ~ </span>");
-        	        	}*/
         	        });
         	        
         	        angular.forEach(value.chronometer, function (value, index){
@@ -561,8 +548,31 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile)
     	}, function errorCallback(response) {
 
     	});
-	
-		$scope.showLoading = false;
+		
+		$http({
+			method: "POST",
+            url: 'SelectSettings',
+            params: {}
+        }).then(function successCallback(response) {
+        	$scope.responseSettings = response.data;
+        	
+         	console.log($scope.responseSettings);
+         	
+         	angular.forEach($scope.responseSettings, function (value, index) {
+         		if(value.theme.indexOf("DARK") >= 0) {
+         			$scope.theme = "LIGHT";
+         			$('link.CSSLINK').attr('href','resources/css/mybookmarkdark.css?v=2');
+         		} else {
+         			$scope.theme = "DARK";
+         			$('link.CSSLINK').attr('href','resources/css/mybookmarklight.css?v=2');
+         		}
+         		
+         		
+         	});
+         	
+        }, function errorCallback(response) {
+
+        });
 	
 	}
 	
@@ -588,7 +598,7 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile)
 			<option ng-repeat="x in divBottom" id="{{x.id}}" value="{{x.name}}">{{x.name}}</option>
 		</select>
 		<br /><br />
-		<button ng-click="ShowEditDivs()">Edit Divs...</button>
+		<button ng-click="ShowEditDivs()">Divs...</button><button ng-click="EditSettings()">{{theme}}</button>
 	</div>
 
 	<div class="DivEditCategory" ng-model="divEditCategory" ng-if="showEditCategory == true">

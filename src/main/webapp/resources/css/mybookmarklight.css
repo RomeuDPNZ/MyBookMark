@@ -1,32 +1,32 @@
 * {
 	margin: 0px;
 	padding: 0px;
-	background-color: #282828;
+	background-color: snow;
 	font-family: 'Roboto', sans-serif;
 	font-size: 100%;
 	line-height: 1.20em;
-	color: #729fcf;
+	color: royalblue;
 }
 
 a {
-	color: orange;
+	color: #282828;
 	text-decoration: none;
 }
 
 h3 {
-	color: azure;
-	border-bottom: 2px solid snow;
+	color: royalblue;
+	border-bottom: 2px solid royalblue;
 }
 
 legend {
-	color: azure;
+	color: royalblue;
 	font-weight: bold;
 }
 
 button {
 	width: 6em;
 	padding: 3px;
-	color: orange;
+	color: royalblue;
 }
 
 div.DivEditDivs {
@@ -37,7 +37,7 @@ div.DivEditDivs {
     right: 1em;
     padding: 1em;
     overflow: auto;
-    border: 2px solid snow;
+    border: 2px solid royalblue;
 }
 
 div.DivEditSettings {
@@ -48,7 +48,7 @@ div.DivEditSettings {
     right: 1em;
     padding: 1em;
     overflow: auto;
-    border: 2px solid snow;
+    border: 2px solid royalblue;
 }
 
 div.DivEditCategory {
@@ -59,7 +59,7 @@ div.DivEditCategory {
     right: 1em;
     padding: 1em;
     overflow: auto;
-    border: 2px solid snow;
+    border: 2px solid royalblue;
 }
 
 div.DivEditCRUDCategory {
@@ -70,7 +70,7 @@ div.DivEditCRUDCategory {
     right: 1em;
     padding: 1em;
     overflow: auto;
-    border: 2px solid snow;
+    border: 2px solid royalblue;
 }
 
 div.DivEditor {
@@ -81,20 +81,20 @@ div.DivEditor {
     right: 1em;
     padding: 1em;
     overflow: auto;
-    border: 2px solid snow;
+    border: 2px solid royalblue;
 }
 
 span.SpanShowDivEditor {
-	color: #729fcf;
+	color: royalblue;
 }
 
 table {
-	border: 2px solid snow;
+	border: 2px solid green;
 	border-collapse: collapse;
 }
 
 th, td {
-	border: 2px solid snow;
+	border: 2px solid green;
   	padding: 15px;
   	text-align: left;
 }
@@ -107,7 +107,7 @@ div.DivThreeColumns {
     right: 1em;
     padding: 5px;
     overflow: auto;
-    border: 2px solid snow;
+    border: 2px solid royalblue;
 }
 
 fieldset.FieldsetThreeColumns {
@@ -115,7 +115,7 @@ fieldset.FieldsetThreeColumns {
 	padding: 1em;
     height: 94%;
     overflow: auto;
-    border: 2px solid snow;
+    border: 2px solid royalblue;
 }
 
 div.Column {
@@ -129,9 +129,9 @@ div.Column {
     -moz-column-gap: 40px;
     column-gap: 40px;
     column-gap: 40px;
-    -webkit-column-rule: 2px solid snow;
-    -moz-column-rule: 2px solid snow;
-    column-rule: 2px solid snow;
+    -webkit-column-rule: 2px solid royalblue;
+    -moz-column-rule: 2px solid royalblue;
+    column-rule: 2px solid royalblue;
 }
 
 div.Category {
@@ -142,6 +142,6 @@ div.Category {
     right: 1em;
     padding: 1em;
     overflow: auto;
-    border: 2px solid snow;
+    border: 2px solid royalblue;
 }
 

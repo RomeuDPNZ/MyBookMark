@@ -9,7 +9,7 @@ public class Settings extends MyBookMark implements SettingsInterface {
 	
 	@Enumerated(EnumType.STRING)
 	private Theme theme;
-	
+
 	public Settings() {
 		
 	}
@@ -19,12 +19,18 @@ public class Settings extends MyBookMark implements SettingsInterface {
 		this.setTheme(theme);
 	}
 	
-	public void setTheme(Theme theme) {
-		this.theme = theme;
+	public Settings(String name, String description, Theme theme) {
+		this(name, theme);
+		super.setDescription(description);
 	}
 
 	public Theme getTheme() {
-		return this.theme;
+		return theme;
 	}
+
+	public void setTheme(Theme theme) {
+		this.theme = theme;
+	}
+	
 	
 }

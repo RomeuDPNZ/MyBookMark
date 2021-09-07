@@ -99,4 +99,20 @@ version="4.0">
         <servlet-name>EditReminders</servlet-name>
         <url-pattern>/EditReminders</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>SelectSettings</servlet-name>
+        <servlet-class>mybookmark.servlets.SelectSettings</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SelectSettings</servlet-name>
+        <url-pattern>/SelectSettings</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>EditSettings</servlet-name>
+        <servlet-class>mybookmark.servlets.EditSettings</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EditSettings</servlet-name>
+        <url-pattern>/EditSettings</url-pattern>
+    </servlet-mapping>
 </web-app>

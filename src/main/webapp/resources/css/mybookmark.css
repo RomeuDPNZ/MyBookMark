@@ -1,0 +1,156 @@
+a:link {
+}
+
+a:visited {
+}
+
+a:hover {
+}
+
+a:active {
+}
+
+input.Numbers {
+	width: 75px;
+}
+
+span.emoji {
+	margin-left: 5px;
+}
+
+span.happy {
+
+}
+
+span.sad {
+	
+}
+
+div.ForFieldsetThreeColumns {
+	width: 33.3%;
+	float: left;
+	height: 100%;
+    border: none;
+}
+
+span.SpanEditCategory {
+	float: right;
+	position: relative;
+	right: 2px;
+	top: 0px;
+}
+
+button.EditCRUDButton {
+	width: 100%;
+	margin-bottom: 1em;
+}
+
+span.SpanBottomEditCategory {
+	float: right;
+	position: relative;
+	right: 4em;
+	top: 0px;
+}
+
+div.ControlsFrontPage {
+	position: fixed;
+	left: 3em;
+	bottom: 6em;
+	width: 25%;
+	height: 25px;
+}
+
+div.CloseDiv {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 50px;
+    height: 50px;
+}
+
+div.ShowDivEditor {
+	position: fixed;
+	left: 3em;
+	bottom: 6em;
+	width: 25%;
+	height: 25px;
+}
+
+button + button {
+	margin-left: 1em;
+}
+
+div.Chronometer {
+	padding: 5px;
+	margin: 0px;
+	right: 2px;
+	bottom: 2px;
+	background-color: SteelBlue;
+	color: white;
+	border: 1px solid snow;
+	letter-spacing: 1px;
+}
+
+div.Reminder {
+	padding: 5px;
+	margin: 0px;
+	right: 2px;
+	bottom: 2px;
+	background-color: goldenrod;
+	color: #282828;
+	border: 1px solid snow;
+	letter-spacing: 1px;
+}
+
+div.Eve {
+	padding: 5px;
+	margin: 0px;
+	right: 2px;
+	bottom: 2px;
+	color: black;
+	background-color: DarkRed;
+}
+
+div.Reminder+div.Reminder {
+	border-top: 0px;
+}
+
+div.Chronometer+div.Chronometer {
+	border-top: 0px;
+}
+
+div.Icon {
+	padding: 5px;
+	position: relative;
+	margin: 0px;
+	right: 2px;
+	bottom: 2px;
+	background-color: lightyellow;
+	color: DarkGoldenRod;
+	border: 1px solid black;
+	letter-spacing: 1px;
+}
+
+span.Difference {
+	font-weight: bold;
+	color: snow;
+	background-color: SteelBlue;
+}
+
+span.Eve {
+	color: black;
+	background-color: DarkRed;
+}
+
+span.Example {
+	color: CornflowerBlue;
+	font-size: small;
+	font-family: tahoma, sans-serif;
+	margin-left: 1em;
+}
+
+span.Spacer:not(:last-child):before {
+    content: " ~ ";
+    color: snow;
+}
+

@@ -103,3 +103,5 @@ INSERT INTO Divs (name, position) VALUES ('Div LEFT', 'LEFT');
 INSERT INTO Divs (name, position) VALUES ('Div CENTER', 'CENTER');
 INSERT INTO Divs (name, position) VALUES ('Div RIGHT', 'RIGHT');
 
+INSERT INTO Settings (name, description, theme) VALUES ('Default', 'Default Settings', 'DARK');
+
