@@ -20,13 +20,14 @@
 <script src="resources/js/jquery-ui.js"></script>
 <script src="resources/js/moment.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-sanitize.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-route/1.8.2/angular-route.js"></script>
 <script type="text/javascript"> 
 //<![CDATA[
 
-var app = angular.module('bmIndex', ['ngRoute']);
+var app = angular.module('bmIndex', ['ngRoute','ngSanitize']);
 
-app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile) {
+app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile, $sanitize) {
 	
 	$scope.divEditCategory = [];
 	$scope.divEditCRUDCategory = [];
@@ -456,7 +457,7 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile)
     		angular.forEach($scope.responseSelectDivs, function (value, index){
     		
     			var divId = value.id;
-    			var divName = value.name.replace(/[\W_]/g,"")+"Legend";
+    			var divName = value.name.replace(/ /g,"")+"Legend";
     			var idAndNameDiv = divName+divId;
     			var position = value.position;
     			var toCompile;
@@ -516,10 +517,12 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile)
     				}
         	    	
         	        angular.forEach(value.links, function (value, index){
+        	        	var link = $sanitize(value.link);
+        	        	
             	    	if(position != 'BOTTOM') {
-            	    		angular.element("div.Links"+idCategory).append("<a href=\""+value.link+"\">"+value.name+"</a><span class=\"Spacer\"></span>");
+            	    		angular.element("div.Links"+idCategory).append("<a href=\""+link+"\">"+value.name+"</a><span class=\"Spacer\"></span>");
             	    	} else {
-            	    		angular.element("div.Links"+idCategory).append("<a href=\""+value.link+"\">"+value.name+"</a><span class=\"Example\">"+value.description+"</span><br />");
+            	    		angular.element("div.Links"+idCategory).append("<a href=\""+link+"\">"+value.name+"</a><span class=\"Example\">"+value.description+"</span><br />");
             	    	}
         	        });
         	        
