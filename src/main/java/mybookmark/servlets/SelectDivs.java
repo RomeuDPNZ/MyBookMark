@@ -32,6 +32,9 @@ public class SelectDivs extends HttpServlet {
 		try {
 			HibernateDAO mbmDAO = new HibernateDAO();
 			
+			jsonArray = mbmDAO.selectAll();
+			
+			/*
 			List<Divs> divsList = (List) mbmDAO.selectAll(Divs.class);		
 			
 			for (Divs d : divsList) {
@@ -134,6 +137,7 @@ public class SelectDivs extends HttpServlet {
 		        
 		        jsonArray.put(jsonDivs);
 			}
+			*/
 			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

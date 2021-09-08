@@ -7,40 +7,14 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class HibernateDAO {
 	
 	public HibernateDAO() {
 
 	}
-	
-	/*
-	private MyBookMark getTypeFactory(Class type) throws Exception{
-		
-		MyBookMark mbmType = null;
-		
-		if(type.equals(Divs.class)) {
-			mbmType = new Divs();
-		} else if(type.equals(Categories.class)) {
-			mbmType = new Categories();
-		} else if(type.equals(Links.class)) {
-			mbmType = new Links();
-		} else if(type.equals(Chronometer.class)) {
-			mbmType = new Chronometer();
-		} else if(type.equals(Countdown.class)) {
-			mbmType = new Countdown();
-		} else if(type.equals(AnnualReminder.class)) {
-			mbmType = new AnnualReminder();
-		} else if(type.equals(MonthlyReminder.class)) {
-			mbmType = new MonthlyReminder();
-		} else if(type.equals(Settings.class)) {
-			mbmType = new Settings();
-		} else {
-			throw new Exception("Unknow Class inside getTypeFactory() method inside MyBookMarkDAO class");
-		}
-		
-		return mbmType;
-	}
-	*/
 	
 	public Long insert(Object o) throws Exception {
 		Long lastInsertId = 0l;
@@ -141,6 +115,141 @@ public class HibernateDAO {
 		em.close();
 		hs.close();
 		return myBookMarkList;
+	}
+	
+	public JSONArray selectAll() throws Exception {
+		JSONArray jsonArray = new JSONArray();
+		HibernateEntityManagerFactory hs = new HibernateEntityManagerFactory();
+		EntityManager em = hs.getEntityManagerFactory();
+		em.getTransaction().begin();
+		
+		String sqlQuery = "SELECT * FROM Divs";
+		Query q = em.createNativeQuery(sqlQuery, Divs.class);
+		List<Divs> divsList = (List) q.getResultList();		
+		
+		for (Divs d : divsList) {
+			JSONObject jsonDivs = new JSONObject();
+			jsonDivs.put("id", d.getId());
+			jsonDivs.put("name", d.getName());
+			jsonDivs.put("description", d.getDescription());
+			jsonDivs.put("position", d.getPosition());
+			jsonDivs.put("lastUpdatedOn", d.getLastUpdatedOnString());
+			jsonDivs.put("createdOn", d.getCreatedOnString());
+	        
+			sqlQuery = "SELECT * FROM Categories WHERE divs=?";
+			q = em.createNativeQuery(sqlQuery, Categories.class);
+			q.setParameter(1, d.getId());	
+	        List<Categories> categoriesList = (List) q.getResultList();
+	        
+	        for (Categories c : categoriesList) {
+	        	JSONObject jsonCategories = new JSONObject();
+				jsonCategories.put("id", c.getId());
+				jsonCategories.put("div", c.getDivs());
+				jsonCategories.put("name", c.getName());
+				jsonCategories.put("description", c.getDescription());
+				jsonCategories.put("lastUpdatedOn", c.getLastUpdatedOnString());
+				jsonCategories.put("createdOn", c.getCreatedOnString());
+		        
+				sqlQuery = "SELECT * FROM Links WHERE category=?";
+				q = em.createNativeQuery(sqlQuery, Links.class);
+				q.setParameter(1, c.getId());	
+				List<Links> linksList = (List) q.getResultList();
+		        
+		        for (Links l : linksList) {
+		        	JSONObject jsonLinks = new JSONObject();
+					jsonLinks.put("id", l.getId());
+					jsonLinks.put("category", l.getCategory());
+					jsonLinks.put("name", l.getName());
+					jsonLinks.put("link", l.getLink());
+					jsonLinks.put("description", l.getDescription());
+					jsonLinks.put("lastUpdatedOn", l.getLastUpdatedOnString());
+					jsonLinks.put("createdOn", l.getCreatedOnString());
+			        jsonCategories.append("links", jsonLinks);
+		        }
+		        
+		        sqlQuery = "SELECT * FROM Chronometer WHERE category=?";
+				q = em.createNativeQuery(sqlQuery, Chronometer.class);
+				q.setParameter(1, c.getId());	
+		        List<Chronometer> chronometerList = (List) q.getResultList();
+		        
+		        for (Chronometer l : chronometerList) {
+		        	JSONObject jsonChronometer = new JSONObject();
+					jsonChronometer.put("id", l.getId());
+					jsonChronometer.put("category", l.getCategory());
+					jsonChronometer.put("name", l.getName());
+					jsonChronometer.put("dateOf", l.getDateOfString());
+					jsonChronometer.put("description", l.getDescription());
+					jsonChronometer.put("lastUpdatedOn", l.getLastUpdatedOnString());
+					jsonChronometer.put("createdOn", l.getCreatedOnString());
+			        jsonCategories.append("chronometer", jsonChronometer);
+		        }
+		        
+		        sqlQuery = "SELECT * FROM Countdown WHERE category=?";
+				q = em.createNativeQuery(sqlQuery, Countdown.class);
+				q.setParameter(1, c.getId());	
+		        List<Countdown> countdownList = (List) q.getResultList();
+		        
+		        for (Countdown l : countdownList) {
+		        	JSONObject jsonCountdown = new JSONObject();
+					jsonCountdown.put("id", l.getId());
+					jsonCountdown.put("category", l.getCategory());
+					jsonCountdown.put("name", l.getName());
+					jsonCountdown.put("dateOf", l.getDateOfString());
+					jsonCountdown.put("description", l.getDescription());
+					jsonCountdown.put("lastUpdatedOn", l.getLastUpdatedOnString());
+					jsonCountdown.put("createdOn", l.getCreatedOnString());
+			        jsonCategories.append("countdown", jsonCountdown);
+		        }
+		        
+		        sqlQuery = "SELECT * FROM AnnualReminder WHERE category=?";
+				q = em.createNativeQuery(sqlQuery, AnnualReminder.class);
+				q.setParameter(1, c.getId());
+		        List<AnnualReminder> annualReminderList = (List) q.getResultList();
+		        
+		        for (AnnualReminder l : annualReminderList) {
+		        	JSONObject jsonAnnualReminder = new JSONObject();
+					jsonAnnualReminder.put("id", l.getId());
+					jsonAnnualReminder.put("category", l.getCategory());
+					jsonAnnualReminder.put("name", l.getName());
+					jsonAnnualReminder.put("day", l.getDay());
+					jsonAnnualReminder.put("month", l.getMonth());
+					jsonAnnualReminder.put("daysBefore", l.getDaysBefore());
+					jsonAnnualReminder.put("daysAfter", l.getDaysAfter());
+					jsonAnnualReminder.put("description", l.getDescription());
+					jsonAnnualReminder.put("lastUpdatedOn", l.getLastUpdatedOnString());
+					jsonAnnualReminder.put("createdOn", l.getCreatedOnString());
+			        jsonCategories.append("annualReminder", jsonAnnualReminder);
+		        }
+		        
+		        sqlQuery = "SELECT * FROM MonthlyReminder WHERE category=?";
+				q = em.createNativeQuery(sqlQuery, MonthlyReminder.class);
+				q.setParameter(1, c.getId());
+		        List<MonthlyReminder> monthlyReminderList = (List) q.getResultList();
+		        
+		        for (MonthlyReminder l : monthlyReminderList) {
+		        	JSONObject jsonMonthlyReminder = new JSONObject();
+					jsonMonthlyReminder.put("id", l.getId());
+					jsonMonthlyReminder.put("category", l.getCategory());
+					jsonMonthlyReminder.put("name", l.getName());
+					jsonMonthlyReminder.put("day", l.getDay());
+					jsonMonthlyReminder.put("daysBefore", l.getDaysBefore());
+					jsonMonthlyReminder.put("daysAfter", l.getDaysAfter());
+					jsonMonthlyReminder.put("description", l.getDescription());
+					jsonMonthlyReminder.put("lastUpdatedOn", l.getLastUpdatedOnString());
+					jsonMonthlyReminder.put("createdOn", l.getCreatedOnString());
+			        jsonCategories.append("monthlyReminder", jsonMonthlyReminder);
+		        }
+		        
+		        jsonDivs.append("categories", jsonCategories);
+	        }
+	        
+	        jsonArray.put(jsonDivs);
+		}
+		
+		em.getTransaction().commit();
+		em.close();
+		hs.close();
+		return jsonArray;
 	}
 
 	public Long doesExists(String name, Class type) {

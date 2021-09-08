@@ -149,8 +149,3 @@ span.Example {
 	margin-left: 1em;
 }
 
-span.Spacer:not(:last-child):before {
-    content: " ~ ";
-    color: snow;
-}
-

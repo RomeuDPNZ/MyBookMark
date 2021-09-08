@@ -145,3 +145,8 @@ div.Category {
     border: 2px solid snow;
 }
 
+span.Spacer:not(:last-child):before {
+    content: " ~ ";
+    color: snow;
+}
+

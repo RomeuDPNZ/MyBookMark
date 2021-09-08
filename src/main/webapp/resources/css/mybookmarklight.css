@@ -145,3 +145,8 @@ div.Category {
     border: 2px solid royalblue;
 }
 
+span.Spacer:not(:last-child):before {
+    content: " ~ ";
+    color: royalblue;
+}
+
