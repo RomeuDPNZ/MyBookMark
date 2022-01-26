@@ -15,7 +15,7 @@
 		<class>mybookmark.dao.AnnualReminder</class>
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
-			<property name="javax.persistence.jdbc.user" value="mybookmarkhibernate" />
+			<property name="javax.persistence.jdbc.user" value="" />
 			<property name="javax.persistence.jdbc.password" value="" />
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/mybookmark" />
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLInnoDBDialect" />
