@@ -2,7 +2,6 @@ package mybookmark.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 
 import jakarta.servlet.http.*;
 

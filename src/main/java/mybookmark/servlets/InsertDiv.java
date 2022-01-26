@@ -27,7 +27,13 @@ public class InsertDiv extends HttpServlet {
 			
 			Divs divs = new Divs("New Div for Editing");
 			
-			mbmDAO.insert(divs);
+			Long divId = mbmDAO.insert(divs);
+			
+			Divs d = (Divs) mbmDAO.select(divId, Divs.class);
+			
+			d.setOrderOf(d.getId());
+			
+			mbmDAO.update(d);
 			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

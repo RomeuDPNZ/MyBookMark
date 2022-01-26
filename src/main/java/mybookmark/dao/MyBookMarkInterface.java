@@ -32,4 +32,8 @@ public interface MyBookMarkInterface {
 
 	public void setCreatedOnString(String createdOn) throws Exception;
 
+	public Long getOrderOf();
+
+	public void setOrderOf(Long orderOf);
+	
 }

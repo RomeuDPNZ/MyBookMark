@@ -27,7 +27,7 @@
 
 var app = angular.module('bmIndex', ['ngRoute','ngSanitize']);
 
-app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile, $sanitize) {
+app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile, $sanitize, $filter) {
 	
 	$scope.divEditCategory = [];
 	$scope.divEditCRUDCategory = [];
@@ -129,7 +129,7 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 			$("span.Difference"+id).addClass("Eve");
 		}
 
-		$("span.Difference"+id).text(objFacility.years+" year(s) "+objFacility.months+" month(s) "+objFacility.days+" day(s)");
+		$("span.Difference"+id).text($scope.twoDigit(objFacility.years)+" year(s) "+$scope.twoDigit(objFacility.months)+" month(s) "+$scope.twoDigit(objFacility.days)+" day(s)");
 	}
 	
 	$scope.CountDown = function(date, compromisso, id, div) {
@@ -198,7 +198,7 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 		$scope.showEditDivs = false;
     }
 	
-	$scope.EditLink = function(idDiv, idCategory, idLink, name, link, description) {
+	$scope.EditLink = function(idDiv, idCategory, idLink, name, link, description, orderOf) {
 		$scope.showLoading = true;
 		
 		$http({
@@ -208,7 +208,8 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
             	id: idLink,
             	name: name,
             	link: link,
-            	description: description
+            	description: description,
+            	orderOf: orderOf
             }
         }).then(function successCallback(response) {
         	$scope.LoadPage();
@@ -218,7 +219,7 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
         });
     }
 	
-	$scope.EditTimers = function(idDiv, idCategory, idTimers, name, dateOf, description, typeClass) {
+	$scope.EditTimers = function(idDiv, idCategory, idTimers, name, dateOf, description, orderOf, typeClass) {
 		$scope.showLoading = true;
 		
 		$http({
@@ -229,6 +230,7 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
             	name: name,
             	dateOf: dateOf,
             	description: description,
+            	orderOf: orderOf,
             	typeClass: typeClass
             }
         }).then(function successCallback(response) {
@@ -239,7 +241,7 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
         });
     }
 	
-	$scope.EditReminders = function(idDiv, idCategory, idReminders, name, day, month, daysBefore, daysAfter, description, typeClass) {
+	$scope.EditReminders = function(idDiv, idCategory, idReminders, name, day, month, daysBefore, daysAfter, description, orderOf, typeClass) {
 		$scope.showLoading = true;
 		
 		$http({
@@ -253,6 +255,7 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
             	daysBefore: daysBefore,
             	daysAfter: daysAfter,
             	description: description,
+            	orderOf: orderOf,
             	typeClass: typeClass
             }
         }).then(function successCallback(response) {
@@ -263,7 +266,7 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
         });
     }
 	
-	$scope.EditDiv = function(id, name, description) {
+	$scope.EditDiv = function(id, name, description, orderOf) {
 		$scope.showLoading = true;
 		
 		$http({
@@ -272,7 +275,8 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
             params: {
             	id: id,
             	name: name,
-            	description: description
+            	description: description,
+            	orderOf: orderOf
             }
         }).then(function successCallback(response) {
         	$scope.LoadPage();
@@ -283,6 +287,8 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
     }
 	
 	$scope.DeleteDiv = function(id) {
+		if(confirm("Confirm Delete of: "+id+"?")) {
+
 		$scope.showLoading = true;
 		
 		$http({
@@ -297,6 +303,8 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
         }, function errorCallback(response) {
 
         });
+		
+		}
     }
 	
 	$scope.InsertDiv = function() {
@@ -314,7 +322,7 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
         });
     }
 	
-	$scope.EditCategory = function(id, name, description) {
+	$scope.EditCategory = function(id, name, description, orderOf) {
 		$scope.showLoading = true;
 		
 		$http({
@@ -323,7 +331,8 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
             params: {
             	id: id,
             	name: name,
-            	description: description
+            	description: description,
+            	orderOf: orderOf
             }
         }).then(function successCallback(response) {
         	$scope.LoadPage();
@@ -334,6 +343,8 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
     }
 	
 	$scope.DeleteCategory = function(id) {
+		if(confirm("Confirm Delete of: "+id+"?")) {
+
 		$scope.showLoading = true;
 		
 		$http({
@@ -348,6 +359,8 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
         }, function errorCallback(response) {
 
         });
+		
+		}
     }
 	
 	$scope.InsertCategory = function(id) {
@@ -367,9 +380,11 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
         });
     }
 	
-	$scope.Delete = function(idDiv, idCategory, idElement, typeClass) {
-		$scope.showLoading = true;
+	$scope.Delete = function(idDiv, idCategory, idElement, typeClass) {		
+		if(confirm("Confirm Delete of: "+idElement+"?")) {
 		
+		$scope.showLoading = true;
+			
 		$http({
 			method: "POST",
             url: 'Delete',
@@ -383,6 +398,8 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
         }, function errorCallback(response) {
 
         });
+		
+		}
     }
 	
 	$scope.Insert = function(idDiv, idCategory, typeClass) {
@@ -428,6 +445,8 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
       	  	params: { }
     	}).then(function successCallback(response) {
     		$scope.responseSelectDivs = response.data;
+    		
+    		$scope.responseSelectDivs = $filter('orderBy')($scope.responseSelectDivs , 'orderOf', false);
     		
     		console.log($scope.responseSelectDivs);
     	
@@ -479,6 +498,8 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 						"</div></div></div>");	
     			}
     	   
+    			value.categories = $filter('orderBy')(value.categories, 'orderOf', false);
+    			
     			angular.forEach(value.categories, function(value, index){
         	    	
         	    	var idCategory = value.id;
@@ -516,6 +537,8 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
         	    		angular.element("div."+idAndNameDiv+idCategory).append("<div class=\"AnnualReminders"+idCategory+"\"></div><br />") 	    	
     				}
         	    	
+        	    	value.links = $filter('orderBy')(value.links, 'orderOf', false);
+        	    	
         	        angular.forEach(value.links, function (value, index){
         	        	var link = $sanitize(value.link);
         	        	
@@ -526,17 +549,25 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
             	    	}
         	        });
         	        
+        	        value.chronometer = $filter('orderBy')(value.chronometer, 'orderOf', false);
+        	        
         	        angular.forEach(value.chronometer, function (value, index){
         	        	$scope.Chronometer(value.dateOf, value.name, "Chronometers"+value.id, "div.Chronometers"+idCategory);
         	        });
+        	        
+        	        value.countdown = $filter('orderBy')(value.countdown, 'orderOf', false);
         	        
         	        angular.forEach(value.countdown, function (value, index){
         	        	$scope.CountDown(value.dateOf, value.name, "Countdowns"+value.id, "div.Countdowns"+idCategory);
         	        });
         	        
+        	        value.annualReminder = $filter('orderBy')(value.annualReminder, 'orderOf', false);
+        	        
         	        angular.forEach(value.annualReminder, function (value, index){
         	        	$scope.AnnualReminder(value.day, value.month, value.name, value.daysBefore, value.daysAfter, "div.AnnualReminders"+idCategory);
         	        });
+        	        
+        	        value.monthlyReminder = $filter('orderBy')(value.monthlyReminder, 'orderOf', false);
         	        
         	        angular.forEach(value.monthlyReminder, function (value, index){
         	        	$scope.MonthlyReminder(value.day, value.name, value.daysBefore, value.daysAfter, "div.MonthlyReminders"+idCategory);
@@ -598,7 +629,7 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 
 	<div class="ControlsFrontPage">
 		<select ng-model="DivsSelectHTML">
-			<option ng-repeat="x in divBottom" id="{{x.id}}" value="{{x.name}}">{{x.name}}</option>
+			<option ng-repeat="x in divBottom | orderBy: 'orderOf'" id="{{x.id}}" value="{{x.name}}">{{x.name}}</option>
 		</select>
 		<br /><br />
 		<button ng-click="ShowEditDivs()">Divs...</button><button ng-click="EditSettings()">{{theme}}</button>
@@ -606,8 +637,8 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 
 	<div class="DivEditCategory" ng-model="divEditCategory" ng-if="showEditCategory == true">
 
-		<div ng-repeat="x in responseSelectDivs | filter: { id: divEditCategory.id }">
-			<div ng-repeat="c in x.categories | filter: { id: divEditCategory.category }">
+		<div ng-repeat="x in responseSelectDivs | filter: { id: divEditCategory.id }:true">
+			<div ng-repeat="c in x.categories | filter: { id: divEditCategory.category }:true">
 			
 				<div>Div: {{x.name}} - Category: {{c.name}} - Position: {{x.position}}</div>
 			
@@ -618,6 +649,7 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 					<thead>
 						<tr>
 							<th>Id</th>
+							<th>Order Of</th>
 							<th>Name</th>
 							<th>Link</th>
 							<th>Description</th>
@@ -628,8 +660,13 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="e in c.links">
+						<tr ng-repeat="e in c.links | orderBy: 'orderOf'">
 							<td>{{e.id}}</td>
+							<td>
+								<input type="text" ng-model="e.orderOf" value="{{e.orderOf}}" size="6" ng-trim="true" />
+								<span class="emoji happy" ng-if="validateNumbers(e.orderOf)">&#128512;</span>
+								<span class="emoji sad" ng-if="!validateNumbers(e.orderOf)">&#129324;</span>
+							</td>
 							<td>
 								<input type="text" ng-model="e.name" value="{{e.name}}" />
 								<span class="emoji happy" ng-if="validateNames(e.name)">&#128512;</span>
@@ -648,11 +685,11 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 							<td>{{e.createdOn}}</td>
 							<td>{{e.lastUpdatedOn}}</td>
 							<td><button ng-disabled="!validateNames(e.name) || !validateURL(e.link) || !validateNames(e.description)"
-										ng-click="EditLink(x.id, c.id, e.id, e.name, e.link, e.description)">Edit</button></td>
+										ng-click="EditLink(x.id, c.id, e.id, e.name, e.link, e.description, e.orderOf)">Edit</button></td>
 							<td><button ng-click="Delete(x.id, c.id, e.id, 'Link')">Delete</button></td>
 						</tr>
 						<tr>
-							<td colspan="8"><button ng-click="Insert(x.id, c.id, 'Link')">Insert</button></td>
+							<td colspan="9"><button ng-click="Insert(x.id, c.id, 'Link')">Insert</button></td>
 						</tr>
 					</tbody>
 				</table>
@@ -664,6 +701,7 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 					<thead>
 						<tr>
 							<th>Id</th>
+							<th>Order Of</th>
 							<th>Name</th>
 							<th>Date Of</th>
 							<th>Description</th>
@@ -674,8 +712,13 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="e in c.chronometer">
+						<tr ng-repeat="e in c.chronometer | orderBy: 'orderOf'">
 							<td><span>{{e.id}}</span></td>
+							<td>
+								<input type="text" ng-model="e.orderOf" value="{{e.orderOf}}" size="6" ng-trim="true" />
+								<span class="emoji happy" ng-if="validateNumbers(e.orderOf)">&#128512;</span>
+								<span class="emoji sad" ng-if="!validateNumbers(e.orderOf)">&#129324;</span>
+							</td>
 							<td>
 								<input type="text" ng-model="e.name" value="{{e.name}}" />
 								<span class="emoji happy" ng-if="validateNames(e.name)">&#128512;</span>
@@ -694,11 +737,11 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 							<td><span>{{e.createdOn}}</span></td>
 							<td><span>{{e.lastUpdatedOn}}</span></td>
 							<td><button ng-disabled="!validateDateAndTime(e.dateOf) || !validateNames(e.name) || !validateNames(e.description)" 
-										ng-click="EditTimers(x.id, c.id, e.id, e.name, e.dateOf, e.description, 'Chronometer')">Edit</button></td>
+										ng-click="EditTimers(x.id, c.id, e.id, e.name, e.dateOf, e.description, e.orderOf, 'Chronometer')">Edit</button></td>
 							<td><button ng-click="Delete(x.id, c.id, e.id, 'Chronometer')">Delete</button></td>
 						</tr>
 						<tr>
-							<td colspan="8"><button ng-click="Insert(x.id, c.id, 'Chronometer')">Insert</button></td>
+							<td colspan="9"><button ng-click="Insert(x.id, c.id, 'Chronometer')">Insert</button></td>
 						</tr>
 					</tbody>
 				</table>
@@ -710,6 +753,7 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 					<thead>
 						<tr>
 							<th>Id</th>
+							<th>Order Of</th>
 							<th>Name</th>
 							<th>Date Of</th>
 							<th>Description</th>
@@ -720,8 +764,13 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="e in c.countdown">
+						<tr ng-repeat="e in c.countdown | orderBy: 'orderOf'">
 							<td><span>{{e.id}}</span></td>
+							<td>
+								<input type="text" ng-model="e.orderOf" value="{{e.orderOf}}" size="6" ng-trim="true" />
+								<span class="emoji happy" ng-if="validateNumbers(e.orderOf)">&#128512;</span>
+								<span class="emoji sad" ng-if="!validateNumbers(e.orderOf)">&#129324;</span>
+							</td>
 							<td>
 								<input type="text" ng-model="e.name" value="{{e.name}}" />
 								<span class="emoji happy" ng-if="validateNames(e.name)">&#128512;</span>
@@ -740,11 +789,11 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 							<td><span>{{e.createdOn}}</span></td>
 							<td><span>{{e.lastUpdatedOn}}</span></td>
 							<td><button ng-disabled="!validateDateAndTime(e.dateOf) || !validateNames(e.name) || !validateNames(e.description)"
-										ng-click="EditTimers(x.id, c.id, e.id, e.name, e.dateOf, e.description, 'Countdown')">Edit</button></td>
+										ng-click="EditTimers(x.id, c.id, e.id, e.name, e.dateOf, e.description, e.orderOf, 'Countdown')">Edit</button></td>
 							<td><button ng-click="Delete(x.id, c.id, e.id, 'Countdown')">Delete</button></td>
 						</tr>
 						<tr>
-							<td colspan="8"><button ng-click="Insert(x.id, c.id, 'Countdown')">Insert</button></td>
+							<td colspan="9"><button ng-click="Insert(x.id, c.id, 'Countdown')">Insert</button></td>
 						</tr>
 					</tbody>
 				</table>
@@ -756,6 +805,7 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 					<thead>
 						<tr>
 							<th>Id</th>
+							<th>Order Of</th>
 							<th>Name</th>
 							<th>Day</th>
 							<th>Days Before</th>
@@ -768,8 +818,13 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="e in c.monthlyReminder">
+						<tr ng-repeat="e in c.monthlyReminder | orderBy: 'orderOf'">
 							<td><span>{{e.id}}</span></td>
+							<td>
+								<input type="text" ng-model="e.orderOf" value="{{e.orderOf}}" size="6" ng-trim="true" />
+								<span class="emoji happy" ng-if="validateNumbers(e.orderOf)">&#128512;</span>
+								<span class="emoji sad" ng-if="!validateNumbers(e.orderOf)">&#129324;</span>
+							</td>
 							<td>
 								<input type="text" ng-model="e.name" value="{{e.name}}" />
 								<span class="emoji happy" ng-if="validateNames(e.name)">&#128512;</span>
@@ -799,11 +854,11 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 							<td><span>{{e.lastUpdatedOn}}</span></td>
 							<td><button ng-disabled="!validateNumbers(e.day) || !validateNumbers(e.daysBefore) || 
 													!validateNumbers(e.daysAfter) || !validateNames(e.name) || !validateNames(e.description)"
-										ng-click="EditReminders(x.id, c.id, e.id, e.name, e.day, 0, e.daysBefore, e.daysAfter, e.description, 'Monthly')">Edit</button></td>
+										ng-click="EditReminders(x.id, c.id, e.id, e.name, e.day, 0, e.daysBefore, e.daysAfter, e.description, e.orderOf, 'Monthly')">Edit</button></td>
 							<td><button ng-click="Delete(x.id, c.id, e.id, 'Monthly')">Delete</button></td>
 						</tr>
 						<tr>
-							<td colspan="10"><button ng-click="Insert(x.id, c.id, 'Monthly')">Insert</button></td>
+							<td colspan="11"><button ng-click="Insert(x.id, c.id, 'Monthly')">Insert</button></td>
 						</tr>
 					</tbody>
 				</table>
@@ -815,6 +870,7 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 					<thead>
 						<tr>
 							<th>Id</th>
+							<th>Order Of</th>
 							<th>Name</th>
 							<th>Day</th>
 							<th>Month</th>
@@ -828,8 +884,13 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="e in c.annualReminder">
+						<tr ng-repeat="e in c.annualReminder | orderBy: 'orderOf'">
 							<td><span>{{e.id}}</span></td>
+							<td>
+								<input type="text" ng-model="e.orderOf" value="{{e.orderOf}}" size="6" ng-trim="true" />
+								<span class="emoji happy" ng-if="validateNumbers(e.orderOf)">&#128512;</span>
+								<span class="emoji sad" ng-if="!validateNumbers(e.orderOf)">&#129324;</span>
+							</td>
 							<td>
 								<input type="text" ng-model="e.name" value="{{e.name}}" />
 								<span class="emoji happy" ng-if="validateNames(e.name)">&#128512;</span>
@@ -864,11 +925,11 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 							<td><span>{{e.lastUpdatedOn}}</span></td>
 							<td><button ng-disabled="!validateNumbers(e.day) || !validateNumbers(e.month) || !validateNumbers(e.daysBefore) || 
 													!validateNumbers(e.daysAfter) || !validateNames(e.name) || !validateNames(e.description)"
-										ng-click="EditReminders(x.id, c.id, e.id, e.name, e.day, e.month, e.daysBefore, e.daysAfter, e.description, 'Annual')">Edit</button></td>
+										ng-click="EditReminders(x.id, c.id, e.id, e.name, e.day, e.month, e.daysBefore, e.daysAfter, e.description, e.orderOf, 'Annual')">Edit</button></td>
 							<td><button ng-click="Delete(x.id, c.id, e.id, 'Annual')">Delete</button></td>
 						</tr>
 						<tr>
-							<td colspan="11"><button ng-click="Insert(x.id, c.id, 'Annual')">Insert</button></td>
+							<td colspan="12"><button ng-click="Insert(x.id, c.id, 'Annual')">Insert</button></td>
 						</tr>
 					</tbody>
 				</table>
@@ -892,6 +953,7 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 				<thead>
 					<tr>
 						<th>Id</th>
+						<th>Order Of</th>
 						<th>Name</th>
 						<th>Description</th>
 						<th>Created On</th>
@@ -902,8 +964,13 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 				</thead>
 				<tbody>
 					<tr
-						ng-repeat="e in x.categories">
+						ng-repeat="e in x.categories | orderBy: 'orderOf'">
 						<td>{{e.id}}</td>
+						<td>
+							<input type="text" ng-model="e.orderOf" value="{{e.orderOf}}" size="6" ng-trim="true" />
+							<span class="emoji happy" ng-if="validateNumbers(e.orderOf)">&#128512;</span>
+							<span class="emoji sad" ng-if="!validateNumbers(e.orderOf)">&#129324;</span>
+						</td>
 						<td>
 							<input type="text" ng-model="e.name" value="{{e.name}}" />
 							<span class="emoji happy" ng-if="validateNames(e.name)">&#128512;</span>
@@ -917,11 +984,11 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 						<td>{{e.createdOn}}</td>
 						<td>{{e.lastUpdatedOn}}</td>
 						<td><button ng-disabled="!validateNames(e.name) || !validateNames(e.description)" 
-									ng-click="EditCategory(e.id, e.name, e.description)">Edit</button></td>
+									ng-click="EditCategory(e.id, e.name, e.description, e.orderOf)">Edit</button></td>
 						<td><button ng-click="DeleteCategory(e.id)">Delete</button></td>
 					</tr>
 					<tr>
-						<td colspan="7"><button ng-click="InsertCategory(x.id)">Insert</button></td>
+						<td colspan="8"><button ng-click="InsertCategory(x.id)">Insert</button></td>
 					</tr>
 				</tbody>
 			</table>
@@ -939,6 +1006,7 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 			<thead>
 				<tr>
 					<th>Id</th>
+					<th>Order Of</th>
 					<th>Name</th>
 					<th>Description</th>
 					<th>Position</th>
@@ -950,6 +1018,7 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 			<tbody>
 				<tr ng-repeat="e in divsTop">
 					<td>{{e.id}}</td>
+					<td>{{e.orderOf}}</td>
 					<td>
 						<input type="text" ng-model="e.name" value="{{e.name}}" />
 						<span class="emoji happy" ng-if="validateNames(e.name)">&#128512;</span>
@@ -964,7 +1033,7 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 					<td>{{e.createdOn}}</td>
 					<td>{{e.lastUpdatedOn}}</td>
 					<td><button ng-disabled="!validateNames(e.name) || !validateNames(e.description)" 
-								ng-click="EditDiv(e.id, e.name, e.description)">Edit</button></td>
+								ng-click="EditDiv(e.id, e.name, e.description, orderOf)">Edit</button></td>
 				</tr>
 			</tbody>
 		</table>
@@ -976,6 +1045,7 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 			<thead>
 				<tr>
 					<th>Id</th>
+					<th>Order Of</th>
 					<th>Name</th>
 					<th>Description</th>
 					<th>Position</th>
@@ -986,8 +1056,13 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="e in divBottom">
+				<tr ng-repeat="e in divBottom | orderBy: 'orderOf'">
 					<td>{{e.id}}</td>
+					<td>
+						<input type="text" ng-model="e.orderOf" value="{{e.orderOf}}" size="6" ng-trim="true" />
+						<span class="emoji happy" ng-if="validateNumbers(e.orderOf)">&#128512;</span>
+						<span class="emoji sad" ng-if="!validateNumbers(e.orderOf)">&#129324;</span>
+					</td>
 					<td>
 						<input type="text" ng-model="e.name" value="{{e.name}}" />
 						<span class="emoji happy" ng-if="validateNames(e.name)">&#128512;</span>
@@ -1002,11 +1077,11 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 					<td>{{e.createdOn}}</td>
 					<td>{{e.lastUpdatedOn}}</td>
 					<td><button ng-disabled="!validateNames(e.name) || !validateNames(e.description)" 
-							ng-click="EditDiv(e.id, e.name, e.description)">Edit</button></td>
+							ng-click="EditDiv(e.id, e.name, e.description, e.orderOf)">Edit</button></td>
 					<td><button ng-click="DeleteDiv(e.id)">Delete</button></td>
 				</tr>
 				<tr>
-					<td colspan="8"><button ng-click="InsertDiv()">Insert</button></td>
+					<td colspan="9"><button ng-click="InsertDiv()">Insert</button></td>
 				</tr>
 			</tbody>
 		</table>

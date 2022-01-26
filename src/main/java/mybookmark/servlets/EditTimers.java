@@ -19,6 +19,7 @@ public class EditTimers extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
 		
     	Long idTimer = Long.parseLong(req.getParameter("idTimers"));
+    	Long orderOf = Long.parseLong(req.getParameter("orderOf"));
     	String name = req.getParameter("name");
     	String dateOf = req.getParameter("dateOf");
     	String description = req.getParameter("description");
@@ -38,6 +39,7 @@ public class EditTimers extends HttpServlet {
 				c.setDateOfString(dateOf);
 				c.setName(name);
 				c.setDescription(description);
+				c.setOrderOf(orderOf);
 				
 				mbmDAO.update(c);
 			} else if(typeClass.equals("Countdown")) {
@@ -46,6 +48,7 @@ public class EditTimers extends HttpServlet {
 				c.setDateOfString(dateOf);
 				c.setName(name);
 				c.setDescription(description);
+				c.setOrderOf(orderOf);
 				
 				mbmDAO.update(c);
 			}

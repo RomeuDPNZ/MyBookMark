@@ -19,6 +19,7 @@ public class EditReminders extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
 		
     	Long idReminder = Long.parseLong(req.getParameter("idReminders"));
+    	Long orderOf = Long.parseLong(req.getParameter("orderOf"));
     	String name = req.getParameter("name");
     	Long day = Long.parseLong(req.getParameter("day"));
     	Long month = Long.parseLong(req.getParameter("month"));
@@ -44,6 +45,7 @@ public class EditReminders extends HttpServlet {
 				ar.setDaysAfter(daysAfter);
 				ar.setName(name);
 				ar.setDescription(description);
+				ar.setOrderOf(orderOf);
 				
 				mbmDAO.update(ar);
 			} else if(typeClass.equals("Monthly")) {
@@ -54,6 +56,7 @@ public class EditReminders extends HttpServlet {
 				mr.setDaysAfter(daysAfter);
 				mr.setName(name);
 				mr.setDescription(description);
+				mr.setOrderOf(orderOf);
 				
 				mbmDAO.update(mr);
 			}

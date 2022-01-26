@@ -23,12 +23,14 @@ public abstract class MyBookMark implements MyBookMarkInterface {
 	private Date lastUpdatedOn;
 	@Column(name = "createdOn", insertable = false, updatable = false)
 	private Date createdOn;
+	private Long orderOf;
 	
 	@Transient
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	public MyBookMark() {
 		this.setDescription("");
+		this.setOrderOf(1l);
 	}
 	
 	public Long getId() {
@@ -85,6 +87,14 @@ public abstract class MyBookMark implements MyBookMarkInterface {
 
 	public void setCreatedOnString(String createdOn) throws Exception {
 		this.setCreatedOn(this.sdf.parse(createdOn));
+	}
+	
+	public Long getOrderOf() {
+		return this.orderOf;
+	}
+
+	public void setOrderOf(Long orderOf) {
+		this.orderOf = orderOf;
 	}
 	
 }

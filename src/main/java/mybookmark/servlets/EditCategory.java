@@ -18,6 +18,7 @@ public class EditCategory extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
 		
     	Long id = Long.parseLong(req.getParameter("id"));
+    	Long orderOf = Long.parseLong(req.getParameter("orderOf"));
     	String name = req.getParameter("name");
     	String description = req.getParameter("description");
     	
@@ -33,6 +34,7 @@ public class EditCategory extends HttpServlet {
 			
 			categories.setName(name);
 			categories.setDescription(description);
+			categories.setOrderOf(orderOf);
 			
 			mbmDAO.update(categories);
 		} catch (Exception e) {

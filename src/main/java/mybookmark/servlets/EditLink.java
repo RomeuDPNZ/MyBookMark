@@ -17,7 +17,8 @@ public class EditLink extends HttpServlet {
 	@Override
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
 		
-    	Long idLink = Long.parseLong(req.getParameter("id"));
+		Long idLink = Long.parseLong(req.getParameter("id"));
+		Long orderOf = Long.parseLong(req.getParameter("orderOf"));
     	String name = req.getParameter("name");
     	String linkFromInput = req.getParameter("link");
     	String description = req.getParameter("description");
@@ -36,6 +37,7 @@ public class EditLink extends HttpServlet {
 			link.setName(name);
 			link.setLink(linkFromInput);
 			link.setDescription(description);
+			link.setOrderOf(orderOf);
 			
 			mbmDAO.update(link);
 			

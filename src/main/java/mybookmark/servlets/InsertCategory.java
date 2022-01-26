@@ -29,7 +29,13 @@ public class InsertCategory extends HttpServlet {
 			
 			Categories categories = new Categories("New Category for Editing", id);
 			
-			mbmDAO.insert(categories);
+			Long cId = mbmDAO.insert(categories);
+			
+			Categories c = (Categories) mbmDAO.select(cId, Categories.class);
+			
+			c.setOrderOf(c.getId());
+			
+			mbmDAO.update(c);
 			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

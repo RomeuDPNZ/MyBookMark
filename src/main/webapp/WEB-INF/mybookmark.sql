@@ -8,6 +8,51 @@
  *
  */
 
+/*
+ * ALTER TABLE Chronometer MODIFY COLUMN dateOf DATETIME NOT NULL; 
+ * 
+ * ALTER TABLE Countdown MODIFY COLUMN dateOf DATETIME NOT NULL; 
+ * 
+ */
+
+/*
+ * ALTER TABLE Divs ADD COLUMN orderOf BIGINT UNSIGNED NOT NULL DEFAULT 1000; 
+ * 
+ * ALTER TABLE Categories ADD COLUMN orderOf BIGINT UNSIGNED NOT NULL DEFAULT 1000;
+ *  
+ * ALTER TABLE Links ADD COLUMN orderOf BIGINT UNSIGNED NOT NULL DEFAULT 1000;
+ * 
+ * ALTER TABLE MonthlyReminder ADD COLUMN orderOf BIGINT UNSIGNED NOT NULL DEFAULT 1000; 
+ * 
+ * ALTER TABLE AnnualReminder ADD COLUMN orderOf BIGINT UNSIGNED NOT NULL DEFAULT 1000; 
+ * 
+ * ALTER TABLE Countdown ADD COLUMN orderOf BIGINT UNSIGNED NOT NULL DEFAULT 1000; 
+ * 
+ * ALTER TABLE Chronometer ADD COLUMN orderOf BIGINT UNSIGNED NOT NULL DEFAULT 1000; 
+ * 
+ * ALTER TABLE Settings ADD COLUMN orderOf BIGINT UNSIGNED NOT NULL DEFAULT 1000;  
+ * 
+ */
+
+/*
+ * UPDATE Divs SET orderOf = id; 
+ * 
+ * UPDATE Categories SET orderOf = id; 
+ *  
+ * UPDATE Links SET orderOf = id; 
+ * 
+ * UPDATE MonthlyReminder SET orderOf = id; 
+ * 
+ * UPDATE AnnualReminder SET orderOf = id; 
+ * 
+ * UPDATE Countdown SET orderOf = id; 
+ * 
+ * UPDATE Chronometer SET orderOf = id;  
+ * 
+ * UPDATE Settings SET orderOf = id;  
+ * 
+ */
+
 USE mybookmark;
 
 CREATE TABLE IF NOT EXISTS Divs (
