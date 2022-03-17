@@ -1,3 +1,7 @@
+:root {
+  --border-color: snow;
+}
+
 * {
 	margin: 0px;
 	padding: 0px;
@@ -6,6 +10,7 @@
 	font-size: 100%;
 	line-height: 1.20em;
 	color: #729fcf;
+	border-radius: 4px;
 }
 
 a {
@@ -15,7 +20,7 @@ a {
 
 h3 {
 	color: azure;
-	border-bottom: 2px solid snow;
+	border-bottom: 2px solid var(--border-color);
 }
 
 legend {
@@ -37,7 +42,7 @@ div.DivEditDivs {
     right: 1em;
     padding: 1em;
     overflow: auto;
-    border: 2px solid snow;
+    border: 2px solid var(--border-color);
 }
 
 div.DivEditSettings {
@@ -48,7 +53,7 @@ div.DivEditSettings {
     right: 1em;
     padding: 1em;
     overflow: auto;
-    border: 2px solid snow;
+    border: 2px solid var(--border-color);
 }
 
 div.DivEditCategory {
@@ -59,7 +64,7 @@ div.DivEditCategory {
     right: 1em;
     padding: 1em;
     overflow: auto;
-    border: 2px solid snow;
+    border: 2px solid var(--border-color);
 }
 
 div.DivEditCRUDCategory {
@@ -70,7 +75,7 @@ div.DivEditCRUDCategory {
     right: 1em;
     padding: 1em;
     overflow: auto;
-    border: 2px solid snow;
+    border: 2px solid var(--border-color);
 }
 
 div.DivEditor {
@@ -81,7 +86,7 @@ div.DivEditor {
     right: 1em;
     padding: 1em;
     overflow: auto;
-    border: 2px solid snow;
+    border: 2px solid var(--border-color);
 }
 
 span.SpanShowDivEditor {
@@ -89,12 +94,12 @@ span.SpanShowDivEditor {
 }
 
 table {
-	border: 2px solid snow;
+	border: 2px solid var(--border-color);
 	border-collapse: collapse;
 }
 
 th, td {
-	border: 2px solid snow;
+	border: 2px solid var(--border-color);
   	padding: 15px;
   	text-align: left;
 }
@@ -107,7 +112,7 @@ div.DivThreeColumns {
     right: 1em;
     padding: 5px;
     overflow: auto;
-    border: 2px solid snow;
+    border: 2px solid var(--border-color);
 }
 
 fieldset.FieldsetThreeColumns {
@@ -115,7 +120,7 @@ fieldset.FieldsetThreeColumns {
 	padding: 1em;
     height: 94%;
     overflow: auto;
-    border: 2px solid snow;
+    border: 2px solid var(--border-color);
 }
 
 div.Column {
@@ -129,9 +134,9 @@ div.Column {
     -moz-column-gap: 40px;
     column-gap: 40px;
     column-gap: 40px;
-    -webkit-column-rule: 2px solid snow;
-    -moz-column-rule: 2px solid snow;
-    column-rule: 2px solid snow;
+    -webkit-column-rule: 2px solid var(--border-color);
+    -moz-column-rule: 2px solid var(--border-color);
+    column-rule: 2px solid var(--border-color);
 }
 
 div.Category {
@@ -142,11 +147,11 @@ div.Category {
     right: 1em;
     padding: 1em;
     overflow: auto;
-    border: 2px solid snow;
+    border: 2px solid var(--border-color);
 }
 
 span.Spacer:not(:last-child):before {
     content: " ~ ";
-    color: snow;
+    color: var(--border-color);
 }
 

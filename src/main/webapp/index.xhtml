@@ -198,243 +198,74 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 		$scope.showEditDivs = false;
     }
 	
-	$scope.EditLink = function(idDiv, idCategory, idLink, name, link, description, orderOf) {
+	$scope.makeHttpPost = function(url, params) {
 		$scope.showLoading = true;
 		
 		$http({
 			method: "POST",
-            url: 'EditLink',
-            params: {
-            	id: idLink,
-            	name: name,
-            	link: link,
-            	description: description,
-            	orderOf: orderOf
-            }
+            url: url,
+            params: params
         }).then(function successCallback(response) {
         	$scope.LoadPage();
-        	$scope.showLoading = false;
         }, function errorCallback(response) {
 
+        }).finally(function() {
+            $scope.showLoading = false;
         });
+    }
+	
+	$scope.EditLink = function(idDiv, idCategory, idLink, name, link, description, orderOf) {
+		$scope.makeHttpPost("EditLink", {id: idLink, name: name, link: link, description: description, orderOf: orderOf});
     }
 	
 	$scope.EditTimers = function(idDiv, idCategory, idTimers, name, dateOf, description, orderOf, typeClass) {
-		$scope.showLoading = true;
-		
-		$http({
-			method: "POST",
-            url: 'EditTimers',
-            params: {
-            	idTimers: idTimers,
-            	name: name,
-            	dateOf: dateOf,
-            	description: description,
-            	orderOf: orderOf,
-            	typeClass: typeClass
-            }
-        }).then(function successCallback(response) {
-        	$scope.LoadPage();
-        	$scope.showLoading = false;
-        }, function errorCallback(response) {
-
-        });
+		$scope.makeHttpPost("EditTimers", {idTimers: idTimers, name: name, dateOf: dateOf, description: description, orderOf: orderOf, typeClass: typeClass});
     }
 	
 	$scope.EditReminders = function(idDiv, idCategory, idReminders, name, day, month, daysBefore, daysAfter, description, orderOf, typeClass) {
-		$scope.showLoading = true;
-		
-		$http({
-			method: "POST",
-            url: 'EditReminders',
-            params: {
-            	idReminders: idReminders,
-            	name: name,
-            	day: day,
-            	month: month,
-            	daysBefore: daysBefore,
-            	daysAfter: daysAfter,
-            	description: description,
-            	orderOf: orderOf,
-            	typeClass: typeClass
-            }
-        }).then(function successCallback(response) {
-        	$scope.LoadPage();
-        	$scope.showLoading = false;
-        }, function errorCallback(response) {
-
-        });
+		$scope.makeHttpPost("EditReminders", {idReminders: idReminders, name: name, day: day, month: month, daysBefore: daysBefore, daysAfter: daysAfter, description: description, orderOf: orderOf, typeClass: typeClass});
     }
 	
 	$scope.EditDiv = function(id, name, description, orderOf) {
-		$scope.showLoading = true;
-		
-		$http({
-			method: "POST",
-            url: 'EditDiv',
-            params: {
-            	id: id,
-            	name: name,
-            	description: description,
-            	orderOf: orderOf
-            }
-        }).then(function successCallback(response) {
-        	$scope.LoadPage();
-        	$scope.showLoading = false;
-        }, function errorCallback(response) {
-
-        });
+		$scope.makeHttpPost("EditDiv", {id: id, name: name, description: description, orderOf: orderOf});
     }
 	
 	$scope.DeleteDiv = function(id) {
 		if(confirm("Confirm Delete of: "+id+"?")) {
-
-		$scope.showLoading = true;
-		
-		$http({
-			method: "POST",
-            url: 'DeleteDiv',
-            params: {
-            	id: id
-            }
-        }).then(function successCallback(response) {
-        	$scope.LoadPage();
-        	$scope.showLoading = false;
-        }, function errorCallback(response) {
-
-        });
-		
+			$scope.makeHttpPost("DeleteDiv", {id: id});
 		}
     }
 	
 	$scope.InsertDiv = function() {
-		$scope.showLoading = true;
-		
-		$http({
-			method: "POST",
-            url: 'InsertDiv',
-            params: { }
-        }).then(function successCallback(response) {
-        	$scope.LoadPage();
-        	$scope.showLoading = false;
-        }, function errorCallback(response) {
-
-        });
+		$scope.makeHttpPost("InsertDiv", {});
     }
 	
 	$scope.EditCategory = function(id, name, description, orderOf) {
-		$scope.showLoading = true;
-		
-		$http({
-			method: "POST",
-            url: 'EditCategory',
-            params: {
-            	id: id,
-            	name: name,
-            	description: description,
-            	orderOf: orderOf
-            }
-        }).then(function successCallback(response) {
-        	$scope.LoadPage();
-        	$scope.showLoading = false;
-        }, function errorCallback(response) {
-
-        });
+		$scope.makeHttpPost("EditCategory", {id: id, name: name, description: description, orderOf: orderOf});
     }
 	
 	$scope.DeleteCategory = function(id) {
 		if(confirm("Confirm Delete of: "+id+"?")) {
-
-		$scope.showLoading = true;
-		
-		$http({
-			method: "POST",
-            url: 'DeleteCategory',
-            params: {
-            	id: id
-            }
-        }).then(function successCallback(response) {
-        	$scope.LoadPage();
-        	$scope.showLoading = false;
-        }, function errorCallback(response) {
-
-        });
-		
+			$scope.makeHttpPost("DeleteCategory", {id: id});	
 		}
     }
 	
 	$scope.InsertCategory = function(id) {
-		$scope.showLoading = true;
-		
-		$http({
-			method: "POST",
-            url: 'InsertCategory',
-            params: {
-            	id: id
-            }
-        }).then(function successCallback(response) {
-        	$scope.LoadPage();
-        	$scope.showLoading = false;
-        }, function errorCallback(response) {
-
-        });
+		$scope.makeHttpPost("InsertCategory", {id: id});
     }
 	
 	$scope.Delete = function(idDiv, idCategory, idElement, typeClass) {		
 		if(confirm("Confirm Delete of: "+idElement+"?")) {
-		
-		$scope.showLoading = true;
-			
-		$http({
-			method: "POST",
-            url: 'Delete',
-            params: {
-            	idElement: idElement,
-            	typeClass: typeClass
-            }
-        }).then(function successCallback(response) {
-        	$scope.LoadPage();
-        	$scope.showLoading = false;
-        }, function errorCallback(response) {
-
-        });
-		
+			$scope.makeHttpPost("Delete", {idElement: idElement, typeClass: typeClass});		
 		}
     }
 	
 	$scope.Insert = function(idDiv, idCategory, typeClass) {
-		$scope.showLoading = true;
-		
-		$http({
-			method: "POST",
-            url: 'Insert',
-            params: {
-            	idDiv: idDiv,
-            	idCategory: idCategory,
-            	typeClass: typeClass
-            }
-        }).then(function successCallback(response) {
-        	$scope.LoadPage();
-        	$scope.showLoading = false;
-        }, function errorCallback(response) {
-
-        });
+		$scope.makeHttpPost("Insert", {idDiv: idDiv, idCategory: idCategory, typeClass: typeClass});
     }
 	
 	$scope.EditSettings = function() {
-		$scope.showLoading = true;
-		
-		$http({
-			method: "POST",
-            url: 'EditSettings',
-            params: { }
-        }).then(function successCallback(response) {
-        	$scope.LoadPage();
-        }, function errorCallback(response) {
-
-        });
-		
-		$scope.showLoading = false;
+		$scope.makeHttpPost("EditSettings", {});
     }
 	
 	$scope.LoadPage = function() {

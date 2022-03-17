@@ -1,3 +1,7 @@
+:root {
+  --border-color: royalblue;
+}
+
 * {
 	margin: 0px;
 	padding: 0px;
@@ -5,28 +9,29 @@
 	font-family: 'Roboto', sans-serif;
 	font-size: 100%;
 	line-height: 1.20em;
-	color: royalblue;
+	color: var(--border-color);
+	border-radius: 4px;
 }
 
 a {
-	color: #282828;
+	color: darkgoldenrod;
 	text-decoration: none;
 }
 
 h3 {
-	color: royalblue;
-	border-bottom: 2px solid royalblue;
+	color: gray;
+	border-bottom: 2px solid var(--border-color);
 }
 
 legend {
-	color: royalblue;
+	color: gray;
 	font-weight: bold;
 }
 
 button {
 	width: 6em;
 	padding: 3px;
-	color: royalblue;
+	color: var(--border-color);
 }
 
 div.DivEditDivs {
@@ -37,7 +42,7 @@ div.DivEditDivs {
     right: 1em;
     padding: 1em;
     overflow: auto;
-    border: 2px solid royalblue;
+    border: 2px solid var(--border-color);
 }
 
 div.DivEditSettings {
@@ -48,7 +53,7 @@ div.DivEditSettings {
     right: 1em;
     padding: 1em;
     overflow: auto;
-    border: 2px solid royalblue;
+    border: 2px solid var(--border-color);
 }
 
 div.DivEditCategory {
@@ -59,7 +64,7 @@ div.DivEditCategory {
     right: 1em;
     padding: 1em;
     overflow: auto;
-    border: 2px solid royalblue;
+    border: 2px solid var(--border-color);
 }
 
 div.DivEditCRUDCategory {
@@ -70,7 +75,7 @@ div.DivEditCRUDCategory {
     right: 1em;
     padding: 1em;
     overflow: auto;
-    border: 2px solid royalblue;
+    border: 2px solid var(--border-color);
 }
 
 div.DivEditor {
@@ -81,20 +86,20 @@ div.DivEditor {
     right: 1em;
     padding: 1em;
     overflow: auto;
-    border: 2px solid royalblue;
+    border: 2px solid var(--border-color);
 }
 
 span.SpanShowDivEditor {
-	color: royalblue;
+	color: var(--border-color);
 }
 
 table {
-	border: 2px solid green;
+	border: 2px solid var(--border-color);
 	border-collapse: collapse;
 }
 
 th, td {
-	border: 2px solid green;
+	border: 2px solid var(--border-color);
   	padding: 15px;
   	text-align: left;
 }
@@ -107,7 +112,7 @@ div.DivThreeColumns {
     right: 1em;
     padding: 5px;
     overflow: auto;
-    border: 2px solid royalblue;
+    border: 2px solid var(--border-color);
 }
 
 fieldset.FieldsetThreeColumns {
@@ -115,7 +120,7 @@ fieldset.FieldsetThreeColumns {
 	padding: 1em;
     height: 94%;
     overflow: auto;
-    border: 2px solid royalblue;
+    border: 2px solid var(--border-color);
 }
 
 div.Column {
@@ -129,9 +134,9 @@ div.Column {
     -moz-column-gap: 40px;
     column-gap: 40px;
     column-gap: 40px;
-    -webkit-column-rule: 2px solid royalblue;
-    -moz-column-rule: 2px solid royalblue;
-    column-rule: 2px solid royalblue;
+    -webkit-column-rule: 2px solid var(--border-color);
+    -moz-column-rule: 2px solid var(--border-color);
+    column-rule: 2px solid var(--border-color);
 }
 
 div.Category {
@@ -142,11 +147,11 @@ div.Category {
     right: 1em;
     padding: 1em;
     overflow: auto;
-    border: 2px solid royalblue;
+    border: 2px solid var(--border-color);
 }
 
 span.Spacer:not(:last-child):before {
     content: " ~ ";
-    color: royalblue;
+    color: var(--border-color);
 }
 
