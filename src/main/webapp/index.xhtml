@@ -864,7 +864,7 @@ app.controller("SelectDivs", function($scope, $route, $timeout, $http, $compile,
 					<td>{{e.createdOn}}</td>
 					<td>{{e.lastUpdatedOn}}</td>
 					<td><button ng-disabled="!validateNames(e.name) || !validateNames(e.description)" 
-								ng-click="EditDiv(e.id, e.name, e.description, orderOf)">Edit</button></td>
+								ng-click="EditDiv(e.id, e.name, e.description, e.orderOf)">Edit</button></td>
 				</tr>
 			</tbody>
 		</table>
